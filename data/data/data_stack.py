@@ -25,7 +25,7 @@ class DataStack(core.Stack):
         )
 
         cognito.CfnIdentityPool(self, 'service-identitypool', 
-            allow_unauthenticated_identities=True
+            allow_unauthenticated_identities=False
         )
 
         # Identity Pool higher-order not implemented yet... 

@@ -20,7 +20,6 @@ tunnel_example() {
 
 load() {
 	echo Creating tables and load sample CSV data into database ...
-	echo $DB_USERNAME, $DB_PASSWORD, $DB_HOST
 	scp ./quotes.ddl.sql ec2-user@${BASTION_HOST}:/tmp
 	scp ./quotes.csv ec2-user@${BASTION_HOST}:/tmp
 	ssh ec2-user@${BASTION_HOST} "mysql -u admin -p${DB_PASSWORD} -h ${DB_HOST} < /tmp/quotes.ddl.sql"
