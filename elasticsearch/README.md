@@ -31,20 +31,20 @@ curl $ES_HOST/_plugin/kibana/
     curl -XGET "$ES_HOST/quotes/_search?q=age&pretty=true"
     ```
 
-    - Load quotes test data.
+* Load quotes test data.
 
     Converted file already provided. SCP to a host and import.
 
     ```bash
     # create index
     curl -XPUT $ES_HOST/quotes
-    # split files into smaller chunks if necessary.
+    # split files into smaller chunks, this has already been done (see zip file).
     head -50000 quotes.json > quotes0-50k.json
     cat quotes.json | head -100000 | tail -50000 > quotes50k-100k.json
     tail -51932 quotes.json > quotes100k-151932.json
-
     head -50000 quotes.json > quotes0-50k.json
-    # import
+
+    # import!
     curl -XPOST $ES_HOST/_bulk --data-binary @quotes0-50k.json -H 'Content-Type: application/json'
     curl -XPOST $ES_HOST/_bulk --data-binary @quotes50k-100k.json -H 'Content-Type: application/json'
     curl -XPOST $ES_HOST/_bulk --data-binary @quotes100k-151932.json -H 'Content-Type: application/json'

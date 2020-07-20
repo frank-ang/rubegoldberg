@@ -4,7 +4,6 @@
 
 Using AWS Console.
 
-
 ## Test using CLI
 From Bastion,
 
@@ -33,10 +32,23 @@ From Bastion,
     del a
     set b "Good-bye" EX 5 
     get b
+    HSET quote:0 genre "age" author "Mark Twain" quote "Escaped Quote &amp; &quot; &apos;"
+    HGETALL quote:0
+    HGET quote:0 author
+    del quote:0
     quit
     ```
 
     Ref: https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/GettingStarted.ConnectToCacheNode.html
+
+## Load Test data
+
+Run the *load-redis.sh* script
+```
+./load-redis.sh [FORTUNE_CSV] [REDIS_ENDPOINT]
+```
+
+> Alternately, lazy-initialization via the microservice.
 
 ## TODO: microservice
 

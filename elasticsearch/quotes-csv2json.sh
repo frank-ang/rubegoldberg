@@ -26,11 +26,4 @@ convert-csv-to-json() {
 	
 }
 
-load() {
-	echo "Loading json data into elasticsearch..."
-	# scp ./quotes.json ec2-user@${BASTION_HOST}:/tmp
-	#ssh ec2-user@${BASTION_HOST} "mysql -u admin -p${DB_PASSWORD} -h ${DB_HOST} < /tmp/quotes.ddl.sql"
-}
-
-# ssh ec2-user@${BASTION_HOST} "some command"
 convert-csv-to-json
