@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"fortune/elasticsearch"
 	"fortune/mysql"
+	"fortune/redis"
 	"log"
 	"net/http"
 	"os"
@@ -35,10 +36,9 @@ func main() {
 		r.HandleFunc("/fortune/es", elasticsearch.GetFortune)
 	}
 	if *redisPtr {
-		// r.HandleFunc("/fortune/redis", redis.GetFortune)
+		r.HandleFunc("/fortune/redis", redis.GetFortune)
 	}
 	http.Handle("/", r)
-
 	fmt.Println("Starting up on " + port)
 	log.Fatal(http.ListenAndServe(":"+port, handlers.CORS()(r)))
 	fmt.Println("Exiting.")
