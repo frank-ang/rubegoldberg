@@ -1,5 +1,5 @@
 #!/bin/bash
-source ../config/config.gitignore
+source ../../config/config.gitignore
 
 tunnel-redis() {
 	lookup-config-db

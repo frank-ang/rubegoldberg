@@ -14,6 +14,12 @@ help:
 build:
 	go build
 
+test: test-mysql test-es test-redis
+	echo "service test completed."
+
+test-unit: test-mysql-unit test-es-unit test-redis-unit
+	echo "unit completed."
+
 test-mysql: tunnel-db
 	-./fortune -mysql &
 	while ! echo exit | nc -vz localhost 80; do sleep 2; done
@@ -51,13 +57,13 @@ test-redis-unit: tunnel-redis
 	-killall ssh
 
 tunnel-db:
-	../fortune-mysql/tunnel-db.sh
+	cd ../fortune-data/mysql && ./tunnel-db.sh
 
 tunnel-es:
-	../fortune-elasticsearch/tunnel-es.sh
+	cd ../fortune-data/elasticsearch && ./tunnel-es.sh
 
 tunnel-redis:
-	../fortune-redis/tunnel-redis.sh
+	cd ../fortune-data/redis && ./tunnel-redis.sh
 
 clean: 
 	go clean

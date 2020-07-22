@@ -1,6 +1,6 @@
 #!/bin/bash
-#
-source ../config/config.functions
+source ../../config/config.gitignore
+source ../../config/config.functions
 
 load() {
 	echo Creating tables and load sample CSV data into database ...

@@ -1,5 +1,6 @@
 #!/bin/bash
-source ../config/config.functions
+source ../../config/config.functions
+source ../../config/config.gitignore
 
 tunnel-db() {
 	lookup-config-db

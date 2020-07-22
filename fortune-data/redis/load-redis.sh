@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # Import fortune test data into Redis. 
 
 FORTUNE_CSV=$1

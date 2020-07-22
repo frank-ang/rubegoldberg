@@ -1,5 +1,3 @@
-source ../config/config.gitignore
-
 lookup-config-db() {
 	echo "Looking up database config from secretsmanager..."
 	SECRET_JSON=`aws secretsmanager get-secret-value --secret-id ${DB_SECRET_NAME} --query 'SecretString' --output text`
