@@ -1,0 +1,5 @@
+# Private properties file.
+export AWS_REGION=EDIT_ME
+export DB_SECRET_NAME=EDIT_ME
+export BASTION_HOST=EDIT_ME
+export REDIS_HOST=EDIT_ME

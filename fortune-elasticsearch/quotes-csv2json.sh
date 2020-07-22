@@ -18,8 +18,8 @@ convert-csv-to-json() {
 		do 
 			INDEX_NUM=$((INDEX_NUM+1))
 			echo '{ "index" : { "_index": "'$ES_INDEX_NAME'", "_id" : "'$INDEX_NUM'" } }'
-			# escape single quote '\'' and double quote \", lets try html escaping.
-			QUOTE_ESC=`echo $QUOTE | sed 's/'\''/\&apos;/g' | sed 's/'\"'/\&quot;/g'`
+			# escape single quote and double quote chars with html entity, escape the ampersand.
+			QUOTE_ESC=`echo $QUOTE | sed 's/'\''/\\\&apos;/g' | sed 's/'\"'/\\\&quot;/g'`
 			echo '{"quote":"'$QUOTE_ESC'", "author":"'$AUTHOR'", "genre":"'$GENRE'"}'
 		done
 	} < $FORTUNE_CSV >> ${FORTUNE_JSON}
