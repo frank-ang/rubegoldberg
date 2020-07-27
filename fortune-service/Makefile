@@ -56,6 +56,7 @@ test-redis: tunnel-redis
 	while ! echo exit | nc -vz localhost 80; do sleep 2; done
 	-curl localhost
 	-curl localhost/fortune/redis
+	-curl localhost/fortune/redis
 	-killall fortune
 	-killall ssh
 
