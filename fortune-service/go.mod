@@ -1,6 +1,7 @@
 module fortune
 
 require (
+	github.com/avast/retry-go v2.6.0+incompatible
 	github.com/aws/aws-sdk-go v1.33.7
 	github.com/elastic/go-elasticsearch/v7 v7.0.0
 	github.com/go-redis/redis/v8 v8.0.0-beta.6

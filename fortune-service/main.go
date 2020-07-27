@@ -24,7 +24,7 @@ func main() {
 	redisPtr := flag.Bool("redis", false, "redis handler")
 
 	flag.Parse()
-	log.Printf("Flags: mysql=%t, redis=%t", *mysqlPtr, *redisPtr)
+	log.Printf("Flags: mysql=%t, redis=%t, elasticsearch=%t", *mysqlPtr, *redisPtr, *esPtr)
 
 	r := mux.NewRouter()
 	r.HandleFunc("/", Greeting)

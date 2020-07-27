@@ -1,0 +1,18 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /opt/fortune
+hooks:
+  AfterInstall:
+    - location: scripts/after_install.sh
+      timeout: 180
+      runas: root
+  ApplicationStop:
+    - location: scripts/stop_fortune.sh
+      timeout: 300
+      runas: root
+  ApplicationStart:
+    - location: scripts/start_fortune.sh
+      timeout: 300
+      runas: root

@@ -1,11 +1,18 @@
 #!/usr/bin/env python3
-
+import os
 from aws_cdk import core
+from fortune.ec2_stack import Ec2Stack
 
-from data.data_stack import DataStack
-env_SIN = core.Environment(region="ap-southeast-1")
+# Edit your configuration
+VPC_ID="vpc-0aab98e7906fc81e5"
+KEY_NAME="macbook2018"
+INSTANCE_ROLE_ARN="arn:aws:iam::450428438179:role/myEC2Role"
+
+env = core.Environment(
+    account=os.environ["CDK_DEFAULT_ACCOUNT"],
+    region=os.environ["CDK_DEFAULT_REGION"])
 
 app = core.App()
-DataStack(app, "service-data", env=env_SIN)
-
+Ec2Stack(app, id="fortune-app", vpc_id=VPC_ID, key_name=KEY_NAME, 
+    instance_role_arn=INSTANCE_ROLE_ARN, env=env)
 app.synth()

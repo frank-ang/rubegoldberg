@@ -11,13 +11,20 @@ export REDIS_HOST:=127.0.0.1
 help:
 	@echo "makefile for fortune"
 
-build:
+# BUILD
+
+build-linux:
+	env GOOS=linux go build -o fortune-linux
+
+build-mac:
 	go build
+
+# TEST
 
 test: test-mysql test-es test-redis
 	echo "service test completed."
 
-test-unit: test-mysql-unit test-es-unit test-redis-unit
+test-unit: test-unit-mysql test-unit-es test-unit-redis
 	echo "unit completed."
 
 test-mysql: tunnel-db
@@ -28,8 +35,8 @@ test-mysql: tunnel-db
 	-killall fortune
 	-killall ssh
 
-test-mysql-unit: tunnel-db
-	-go test -v --run TestMySqlGetSecrets fortune/mysql
+test-unit-mysql: tunnel-db
+	-go test -v --run TestMySql fortune/mysql
 	-killall ssh
 
 test-es: tunnel-es
@@ -40,7 +47,7 @@ test-es: tunnel-es
 	-killall fortune
 	-killall ssh
 
-test-es-unit: tunnel-es
+test-unit-es: tunnel-es
 	-go test -v fortune/elasticsearch
 	-killall ssh
 
@@ -52,7 +59,7 @@ test-redis: tunnel-redis
 	-killall fortune
 	-killall ssh
 
-test-redis-unit: tunnel-redis
+test-unit-redis: tunnel-redis
 	-go test -v fortune/redis
 	-killall ssh
 
@@ -64,6 +71,21 @@ tunnel-es:
 
 tunnel-redis:
 	cd ../fortune-data/redis && ./tunnel-redis.sh
+
+# DEPLOY
+
+deploy:
+	aws deploy push \
+		--application-name FortuneApp \
+		--s3-location s3://sandbox00-playground/codedeploy/FortuneApp.zip \
+		--ignore-hidden-files
+	aws deploy create-deployment \
+		--application-name FortuneApp \
+		--s3-location bucket=sandbox00-playground,key=codedeploy/FortuneApp.zip,bundleType=zip \
+		--deployment-group-name FortuneAppDeploymentGroup \
+		--deployment-config-name CodeDeployDefault.OneAtATime \
+		--description "First Deploy"
+
 
 clean: 
 	go clean

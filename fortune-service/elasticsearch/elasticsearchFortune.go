@@ -1,5 +1,10 @@
 package elasticsearch
 
+/*
+Basic fortune lookup against ElasticSearch.
+TODO: retry connection errors.
+*/
+
 import (
 	"bytes"
 	"context"

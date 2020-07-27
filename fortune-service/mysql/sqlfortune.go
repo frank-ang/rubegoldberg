@@ -1,5 +1,10 @@
 package mysql
 
+/*
+Golang noob MVP implementation of fortune lookup against MySQL DB.
+
+TODO: Retry connection errors in Secrets lookups and connection pool.
+*/
 import (
 	"database/sql"
 	"encoding/json"
@@ -7,6 +12,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/avast/retry-go"
 
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/secretsmanager"
@@ -17,6 +24,8 @@ var (
 	initialized    bool = false
 	DB_SECRET_NAME      = os.Getenv("DB_SECRET_NAME")
 	DB_HOST             = os.Getenv("DB_HOST")
+	username       string
+	password       string
 	db             *sql.DB
 )
 
@@ -27,9 +36,13 @@ type Quote struct {
 
 func GetFortune(w http.ResponseWriter, req *http.Request) {
 	log.Print("Getting quote.")
+
 	if !initialized {
-		Init()
-		initialized = true
+		retry.Do(
+			func() error {
+				return Init()
+			},
+		)
 	}
 	quote := randomQuote()
 	jsonQuote, err := json.MarshalIndent(&quote, "", "    ")
@@ -60,31 +73,44 @@ func queryQuoteCount() (int, error) {
 	return count, nil
 }
 
-func Init() {
-	username, password, _ := getMySqlCredentials()
-	DB_HOST := getMySqlEndpoint()
-	initConnectionPool(username, password, DB_HOST)
+func Init() error {
+	username, password, DB_HOST, err := getMySqlConnectionInfo()
+	if err != nil {
+		return err
+	}
+	err2 := initConnectionPool(username, password, DB_HOST)
+	if err2 != nil {
+		return err2
+	}
 	log.Printf("Verifying DB connection to: %s", DB_HOST)
 	// err := db.Ping() // getting timeouts on aurora somehow..?
-	count, err := queryQuoteCount()
-	if err != nil {
-		fmt.Println(err.Error())
+	count, err3 := queryQuoteCount()
+	if err3 != nil {
+		fmt.Println(err3.Error())
+		return err3
 	}
 	log.Printf("initialization complete. count of records: %d", count)
+	initialized = true
+	return nil
 }
 
-func initConnectionPool(username string, password string, endpoint string) {
+func initConnectionPool(username string, password string, endpoint string) error {
 	connectionString := fmt.Sprintf("%s:%s@tcp(%s:3306)/demo", username, password, endpoint)
 	log.Printf("initializing connection pool...")
 	var err error
 	db, err = sql.Open("mysql", connectionString)
 	if err != nil {
-		log.Panic(err)
+		return err
 	}
 	db.SetMaxIdleConns(5)
+	return nil
 }
 
-func getMySqlCredentials() (string, string, error) {
+func getMySqlConnectionInfo() (string, string, string, error) {
+	if username != "" && password != "" && DB_HOST != "" {
+		return username, password, DB_HOST, nil
+	}
+
 	log.Printf("getting sql creds with secret name: %s", DB_SECRET_NAME)
 	sess := session.Must(session.NewSession())
 	secretsmanagerSvc := secretsmanager.New(sess)
@@ -97,7 +123,7 @@ func getMySqlCredentials() (string, string, error) {
 	output, err := secretsmanagerSvc.GetSecretValue(input)
 	if err != nil {
 		fmt.Println(err.Error())
-		return "", "", err
+		return "", "", "", err
 	}
 	valueMap := make(map[string]interface{})
 	err2 := json.Unmarshal([]byte(*output.SecretString), &valueMap)
@@ -107,32 +133,9 @@ func getMySqlCredentials() (string, string, error) {
 	}
 	secretValue := valueMap["password"].(string)
 	username := valueMap["username"].(string)
-
-	return username, secretValue, nil
-}
-
-// Get the MySQL endpoint from: Secrets Manager, or DB_HOST env variable
-func getMySqlEndpoint() string {
-	log.Print("looking up database endpoint...")
+	dbHost := valueMap["host"].(string)
 	if DB_HOST != "" {
-		return DB_HOST
+		dbHost = DB_HOST
 	}
-	log.Printf("getting endpoint from secret: %s", DB_SECRET_NAME)
-	sess := session.Must(session.NewSession())
-	secretsmanagerSvc := secretsmanager.New(sess)
-	input := &secretsmanager.GetSecretValueInput{
-		SecretId: &DB_SECRET_NAME,
-	}
-	output, err := secretsmanagerSvc.GetSecretValue(input)
-	if err != nil {
-		fmt.Println(err.Error())
-		panic(err) // TODO should retry Secrets Manager lookup.
-	}
-	valueMap := make(map[string]interface{})
-	err2 := json.Unmarshal([]byte(*output.SecretString), &valueMap)
-	if err2 != nil {
-		panic(err2)
-	}
-	endpoint := valueMap["host"].(string)
-	return endpoint
+	return username, secretValue, dbHost, nil
 }

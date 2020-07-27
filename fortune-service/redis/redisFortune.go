@@ -1,5 +1,9 @@
 package redis
 
+/*
+Basic fortune lookup against Redis.
+TODO: retries
+*/
 import (
 	"context"
 	"encoding/json"
