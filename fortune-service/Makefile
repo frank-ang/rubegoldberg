@@ -11,7 +11,7 @@ export REDIS_HOST:=127.0.0.1
 help:
 	@echo "makefile for fortune"
 	@echo "usage:"
-	@echo "  make [ build-linux | build-mac | test | deploy ]"
+	@echo "  make [ build-linux | build-mac | test | deploy-push | deploy ]"
 
 # BUILD
 
@@ -77,11 +77,13 @@ tunnel-redis:
 
 # DEPLOY
 
-deploy:
+deploy-push: build-linux
 	aws deploy push \
 		--application-name FortuneApp \
 		--s3-location s3://sandbox00-playground/codedeploy/FortuneApp.zip \
 		--ignore-hidden-files
+
+deploy: deploy-push
 	aws deploy create-deployment \
 		--application-name FortuneApp \
 		--s3-location bucket=sandbox00-playground,key=codedeploy/FortuneApp.zip,bundleType=zip \
