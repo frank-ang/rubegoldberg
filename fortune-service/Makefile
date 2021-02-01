@@ -10,6 +10,8 @@ export REDIS_HOST:=127.0.0.1
 
 help:
 	@echo "makefile for fortune"
+	@echo "usage:"
+	@echo "  make [ build-linux | build-mac | test | deploy-push | deploy ]"
 
 # BUILD
 
@@ -56,6 +58,7 @@ test-redis: tunnel-redis
 	while ! echo exit | nc -vz localhost 80; do sleep 2; done
 	-curl localhost
 	-curl localhost/fortune/redis
+	-curl localhost/fortune/redis
 	-killall fortune
 	-killall ssh
 
@@ -74,11 +77,13 @@ tunnel-redis:
 
 # DEPLOY
 
-deploy:
+deploy-push: build-linux
 	aws deploy push \
 		--application-name FortuneApp \
 		--s3-location s3://sandbox00-playground/codedeploy/FortuneApp.zip \
 		--ignore-hidden-files
+
+deploy: deploy-push
 	aws deploy create-deployment \
 		--application-name FortuneApp \
 		--s3-location bucket=sandbox00-playground,key=codedeploy/FortuneApp.zip,bundleType=zip \

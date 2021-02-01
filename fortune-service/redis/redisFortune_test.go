@@ -17,7 +17,7 @@ func TestGetEndpoint(t *testing.T) {
 
 func TestRandomQuote(t *testing.T) {
 	t.Log("testing randomQuote...")
-	ret := randomQuote()
+	ret, _ := randomQuote()
 	if ret.Quote == "" {
 		t.Error("Expected non-null quote")
 	}

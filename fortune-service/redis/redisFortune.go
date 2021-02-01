@@ -9,8 +9,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/go-redis/redis/v8"
 )
@@ -26,30 +28,43 @@ type Quote struct {
 
 func GetFortune(w http.ResponseWriter, req *http.Request) {
 	log.Print("Getting quote.")
-	quote := randomQuote()
+	quote, quoteErr := randomQuote()
+	if quoteErr != nil {
+		fmt.Println(quoteErr)
+		http.Error(w, quoteErr.Error(), 500)
+		return
+	}
 	jsonQuote, err := json.MarshalIndent(&quote, "", "    ")
 	if err != nil {
 		fmt.Println(err)
+		http.Error(w, err.Error(), 500)
 		return
 	}
 	fmt.Fprintln(w, string(jsonQuote))
 }
 
-func randomQuote() Quote {
+func randomQuote() (Quote, error) {
 	var q Quote
 	redisClient := getRedisClient()
 	var ctx = context.Background()
-	id := 1 // hardcode test.
+	size64, sizeErr := redisClient.DBSize(ctx).Result()
+	if sizeErr != nil {
+		return q, sizeErr
+	}
+	size := int(size64)
+	rand.Seed(time.Now().UnixNano())
+	id := int(rand.Intn(size))
+	log.Print("DBSize: ", size, ", random ID:", id)
 	key := fmt.Sprint("quote:", id)
 	val, err := redisClient.HGetAll(ctx, key).Result()
 	if err != nil {
-		panic(err)
+		return q, err
 	}
 	q.Id = id
 	q.Author = val["author"]
 	q.Genre = val["genre"]
 	q.Quote = val["quote"]
-	return q
+	return q, nil
 }
 
 func getRedisClient() *redis.Client {
