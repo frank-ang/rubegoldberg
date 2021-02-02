@@ -12,8 +12,18 @@ import (
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+
+	"github.com/aws/aws-xray-sdk-go/xray"
 )
 
+func init() {
+	fmt.Println("fortune main init()")
+	xray.Configure(xray.Config{
+		ServiceVersion: "0.0.1",
+	})
+}
+
+// Fortune. Returns a famous quote.
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -25,6 +35,13 @@ func main() {
 
 	flag.Parse()
 	log.Printf("Flags: mysql=%t, redis=%t, elasticsearch=%t", *mysqlPtr, *redisPtr, *esPtr)
+
+	// TODO remove
+	//http.Handle("/", xray.Handler(xray.NewFixedSegmentNamer("fortune"), http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	//	w.Write([]byte("Hello fortune from xray!"))
+	//})))
+	// or...
+	// router.Handle("/", xray.Handler(xray.NewFixedSegmentNamer("newsegment"), HelloServer()))
 
 	r := mux.NewRouter()
 	r.HandleFunc("/", Greeting)
@@ -38,6 +55,8 @@ func main() {
 	if *redisPtr {
 		r.HandleFunc("/fortune/redis", redis.GetFortune)
 	}
+	// TODO: xrayHandler, doesn't appear to be handling anything?
+	// xrayHandler := xray.Handler(xray.NewFixedSegmentNamer("fortune"), r)
 	http.Handle("/", r)
 
 	fmt.Println("Starting up on " + port)

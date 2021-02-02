@@ -1,13 +1,17 @@
 # Demo service resources
 
+## Architecture
+![Architecture Diagram](docs/architecture.png)
+
+## Fun
 The Swish Machine: 70 Step Basketball Trickshot (Rube Goldberg Machine)
 https://www.youtube.com/watch?v=Ss-P4qLLUyk
 
 [![Basketball Rube Goldberg machine](http://img.youtube.com/vi/Ss-P4qLLUyk/0.jpg)](http://www.youtube.com/watch?v=Ss-P4qLLUyk "Basketball Rube Goldberg machine")
 
-## Setup Environment Resources 
+## Setup Networking and Databases 
 
-These resources can currently be created from the AWS Console:
+These resources are currently manually created via CLI or AWS Console and Makefiles:
 
 * VPC, bastion host.
 * Amazon Aurora MySQL, 
@@ -16,8 +20,12 @@ These resources can currently be created from the AWS Console:
 
 Load sample data. See readmes in [./fortune-data](./fortune-data)
 
-### Setup resources in CDK.
+## Setup Application.
 
-Provisions demo resources in the **service** demo VPC. 
+Provisions application resources in the **service** demo VPC. 
 
 See [./cdk](./cdk)
+
+## Setup API Gateway.
+
+Setup HTTP API here [./fortune-api](./fortune-api)

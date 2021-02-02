@@ -1,5 +1,6 @@
 #!/bin/bash
 source ../../config/config.gitignore
+source ../../config/config.sh
 
 tunnel-es() {
 	lookup-config-db

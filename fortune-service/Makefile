@@ -22,12 +22,15 @@ build-mac:
 	go build
 
 # TEST
+start-xray: 
+	-killall xray_mac
+	cd ~/bin/aws-xray-daemon-macos-3.x/ && ./xray_mac -o &
 
 test: test-mysql test-es test-redis
 	echo "service test completed."
 
-test-unit: test-unit-mysql test-unit-es test-unit-redis
-	echo "unit completed."
+test-connect: test-connect-mysql test-connect-es test-connect-redis
+	echo "connectivity tests completed."
 
 test-mysql: tunnel-db
 	-./fortune -mysql &
@@ -37,11 +40,11 @@ test-mysql: tunnel-db
 	-killall fortune
 	-killall ssh
 
-test-unit-mysql: tunnel-db
+test-connect-mysql: tunnel-db
 	-go test -v --run TestMySql fortune/mysql
 	-killall ssh
 
-test-es: tunnel-es
+test-es: start-xray tunnel-es
 	-./fortune -es &
 	while ! echo exit | nc -vz localhost 80; do sleep 2; done
 	-curl localhost
@@ -49,7 +52,7 @@ test-es: tunnel-es
 	-killall fortune
 	-killall ssh
 
-test-unit-es: tunnel-es
+test-connect-es: start-xray tunnel-es
 	-go test -v fortune/elasticsearch
 	-killall ssh
 
@@ -62,7 +65,7 @@ test-redis: tunnel-redis
 	-killall fortune
 	-killall ssh
 
-test-unit-redis: tunnel-redis
+test-connect-redis: tunnel-redis
 	-go test -v fortune/redis
 	-killall ssh
 

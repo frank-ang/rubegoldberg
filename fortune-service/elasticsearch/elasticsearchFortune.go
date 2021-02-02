@@ -18,8 +18,16 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/aws/aws-xray-sdk-go/xray"
 	"github.com/elastic/go-elasticsearch/v7"
 )
+
+func init() {
+	fmt.Println("elasticsearch init()")
+	xray.Configure(xray.Config{
+		ServiceVersion: "0.0.1",
+	})
+}
 
 var (
 	ES_HOST = os.Getenv("ES_HOST")
@@ -30,14 +38,17 @@ type Quote struct {
 	Quote, Author, Genre string
 }
 
+// GetFortune writes fortune into response.
 func GetFortune(w http.ResponseWriter, req *http.Request) {
 	log.Print("Getting quote.")
+	_, seg := xray.BeginSegment(req.Context(), "fortune.elasticsearch")
 	quote := randomQuote()
 	jsonQuote, err := json.MarshalIndent(&quote, "", "    ")
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
+	seg.Close(nil)
 	fmt.Fprintln(w, string(jsonQuote))
 }
 
