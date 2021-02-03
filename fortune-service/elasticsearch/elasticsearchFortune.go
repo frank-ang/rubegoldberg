@@ -41,7 +41,7 @@ type Quote struct {
 // GetFortune writes fortune into response.
 func GetFortune(w http.ResponseWriter, req *http.Request) {
 	log.Print("Getting quote.")
-	_, seg := xray.BeginSegment(req.Context(), "fortune.elasticsearch")
+	_, seg := xray.BeginSubsegment(req.Context(), "fortune.es.subsegment")
 	quote := randomQuote()
 	jsonQuote, err := json.MarshalIndent(&quote, "", "    ")
 	if err != nil {

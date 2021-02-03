@@ -32,6 +32,12 @@ test: test-mysql test-es test-redis
 test-connect: test-connect-mysql test-connect-es test-connect-redis
 	echo "connectivity tests completed."
 
+test-health: start-xray
+	-./fortune &
+	while ! echo exit | nc -vz localhost 80; do sleep 2; done
+	-curl localhost
+	-killall fortune
+
 test-mysql: tunnel-db
 	-./fortune -mysql &
 	while ! echo exit | nc -vz localhost 80; do sleep 2; done
@@ -44,7 +50,7 @@ test-connect-mysql: tunnel-db
 	-go test -v --run TestMySql fortune/mysql
 	-killall ssh
 
-test-es: start-xray tunnel-es
+test-es: tunnel-es
 	-./fortune -es &
 	while ! echo exit | nc -vz localhost 80; do sleep 2; done
 	-curl localhost
