@@ -1,5 +1,5 @@
 #!/bin/bash
-source ../../config/config.functions
+source ../../config/config.sh
 source ../../config/config.gitignore
 
 tunnel-db() {

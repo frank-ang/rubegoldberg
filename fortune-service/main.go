@@ -10,10 +10,17 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/gorilla/handlers"
-	"github.com/gorilla/mux"
+	"github.com/aws/aws-xray-sdk-go/xray"
 )
 
+func init() {
+	fmt.Println("fortune main init()")
+	xray.Configure(xray.Config{
+		ServiceVersion: "0.0.1",
+	})
+}
+
+// Fortune. Returns a famous quote.
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -26,25 +33,35 @@ func main() {
 	flag.Parse()
 	log.Printf("Flags: mysql=%t, redis=%t, elasticsearch=%t", *mysqlPtr, *redisPtr, *esPtr)
 
-	r := mux.NewRouter()
-	r.HandleFunc("/", Greeting)
-	r.HandleFunc("/health", Greeting)
+	http.Handle("/",
+		xray.Handler(xray.NewFixedSegmentNamer("fortune"),
+			http.HandlerFunc(Greeting)))
+	http.Handle("/health",
+		xray.Handler(xray.NewFixedSegmentNamer("fortune"),
+			http.HandlerFunc(Greeting)))
 	if *mysqlPtr {
-		r.HandleFunc("/fortune/sql", mysql.GetFortune)
+		http.Handle("/fortune/sql",
+			xray.Handler(xray.NewFixedSegmentNamer("fortune"),
+				http.HandlerFunc(mysql.GetFortune)))
 	}
 	if *esPtr {
-		r.HandleFunc("/fortune/es", elasticsearch.GetFortune)
+		http.Handle("/fortune/es",
+			xray.Handler(xray.NewDynamicSegmentNamer("fortune.es", "*.amazonaws.com"),
+				http.HandlerFunc(elasticsearch.GetFortune)))
 	}
 	if *redisPtr {
-		r.HandleFunc("/fortune/redis", redis.GetFortune)
+		http.Handle("/fortune/redis",
+			xray.Handler(xray.NewDynamicSegmentNamer("fortune.redis", "*.amazonaws.com"),
+				http.HandlerFunc(redis.GetFortune)))
 	}
-	http.Handle("/", r)
-
 	fmt.Println("Starting up on " + port)
-	log.Fatal(http.ListenAndServe(":"+port, handlers.CORS()(r)))
+	log.Fatal(http.ListenAndServe(":"+port, nil))
+
 	fmt.Println("Exiting.")
 }
 
 func Greeting(w http.ResponseWriter, req *http.Request) {
+	_, seg := xray.BeginSegment(req.Context(), "fortune.greeting")
 	fmt.Fprintln(w, "Hello, Fortune!")
+	seg.Close(nil)
 }

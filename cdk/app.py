@@ -3,6 +3,7 @@ import os
 from aws_cdk import core
 from fortune.ec2_stack import Ec2Stack
 
+# TODO: lookup from config file.
 # Edit your configuration
 VPC_ID="vpc-0aab98e7906fc81e5"
 KEY_NAME="macbook2018"
