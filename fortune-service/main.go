@@ -62,6 +62,10 @@ func main() {
 
 func Greeting(w http.ResponseWriter, req *http.Request) {
 	_, seg := xray.BeginSegment(req.Context(), "fortune.greeting")
-	fmt.Fprintln(w, "Hello, Fortune!")
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET")
+	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	fmt.Fprintln(w, "{ \"message\": \"Hello, Fortune!\" }")
 	seg.Close(nil)
 }
