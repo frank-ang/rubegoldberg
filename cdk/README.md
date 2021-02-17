@@ -53,3 +53,18 @@ cdk --version
     ```
     cdk destroy
     ```
+
+## CloudWatch Agent
+
+### Configure the CW Agent Config file on 1 host. Use the wizard.
+
+```bash
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-config-wizard
+
+# configure Advanced metrics.
+# watch log file: /opt/fortune/fortune.out
+# Writes to /opt/aws/amazon-cloudwatch-agent/bin/config.json
+# Writes to SSM Parameter Store, temporarily attach IAM policy CloudWatchAgentAdminPolicy
+# Test Start the CloudWatch Agent Using the Command Line
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c ssm:AmazonCloudWatch-linux-fortune
+```
