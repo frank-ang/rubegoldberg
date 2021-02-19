@@ -1,0 +1,536 @@
+{
+    "widgets": [
+        {
+            "type": "metric",
+            "x": 6,
+            "y": 2,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "AWS/ApiGateway", "Latency", "ApiName", "fortune", "Stage", "prod", { "label": "Latency p95", "stat": "p99", "color": "#9467bd" } ],
+                    [ "...", { "label": "Latency p50", "color": "#808080" } ]
+                ],
+                "period": 60,
+                "stat": "p50",
+                "region": "ap-southeast-1",
+                "view": "timeSeries",
+                "stacked": false,
+                "title": "All Latency"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 2,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "AWS/ApiGateway", "Count", "ApiName", "fortune", "Stage", "prod", { "color": "#ff7f0e" } ]
+                ],
+                "period": 300,
+                "stat": "Sum",
+                "region": "ap-southeast-1",
+                "view": "timeSeries",
+                "stacked": false,
+                "title": "All Requests",
+                "yAxis": {
+                    "left": {
+                        "min": 0
+                    }
+                }
+            }
+        },
+        {
+            "type": "metric",
+            "x": 12,
+            "y": 2,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "AWS/ApiGateway", "4XXError", "ApiName", "fortune", "Stage", "prod" ]
+                ],
+                "period": 300,
+                "stat": "Sum",
+                "region": "ap-southeast-1",
+                "start": "2021-02-03T04:28:00Z",
+                "end": "2021-02-18T04:28:00Z",
+                "view": "timeSeries",
+                "stacked": false,
+                "title": "All Errors 4xx"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 18,
+            "y": 2,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "AWS/ApiGateway", "5XXError", "ApiName", "fortune", "Stage", "prod" ]
+                ],
+                "period": 300,
+                "stat": "Sum",
+                "region": "ap-southeast-1",
+                "start": "2021-02-03T04:28:00Z",
+                "end": "2021-02-18T04:28:00Z",
+                "view": "timeSeries",
+                "stacked": false,
+                "title": "All Faults 4xx"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 15,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "AWS/ApiGateway", "Count", "ApiName", "fortune", "Resource", "/fortune/redis", "Stage", "prod", "Method", "GET", { "color": "#d62728" } ]
+                ],
+                "period": 300,
+                "stat": "Sum",
+                "region": "ap-southeast-1",
+                "view": "timeSeries",
+                "stacked": false,
+                "title": "RedService Volume",
+                "yAxis": {
+                    "left": {
+                        "min": 0
+                    }
+                }
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 21,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "AWS/ApiGateway", "Count", "ApiName", "fortune", "Resource", "/fortune/es", "Stage", "prod", "Method", "GET", { "color": "#2ca02c" } ]
+                ],
+                "period": 300,
+                "stat": "Sum",
+                "region": "ap-southeast-1",
+                "view": "timeSeries",
+                "stacked": false,
+                "title": "GreenService Volume",
+                "yAxis": {
+                    "left": {
+                        "min": 0
+                    }
+                }
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 27,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "AWS/ApiGateway", "Count", "ApiName", "fortune", "Resource", "/fortune/sql", "Stage", "prod", "Method", "GET" ]
+                ],
+                "period": 300,
+                "stat": "Sum",
+                "region": "ap-southeast-1",
+                "view": "timeSeries",
+                "stacked": false,
+                "title": "BlueService Volume",
+                "yAxis": {
+                    "left": {
+                        "min": 0
+                    }
+                }
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 8,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "AWS/ApiGateway", "Count", "ApiName", "fortune", "Resource", "/fortune/sql", "Stage", "prod", "Method", "GET" ],
+                    [ "...", "/fortune/es", ".", ".", ".", ".", { "color": "#2ca02c" } ],
+                    [ "...", "/fortune/redis", ".", ".", ".", ".", { "color": "#d62728" } ]
+                ],
+                "period": 300,
+                "stat": "Sum",
+                "region": "ap-southeast-1",
+                "view": "timeSeries",
+                "stacked": false,
+                "title": "Services Volume",
+                "yAxis": {
+                    "left": {
+                        "min": 0
+                    }
+                }
+            }
+        },
+        {
+            "type": "metric",
+            "x": 6,
+            "y": 27,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "AWS/ApiGateway", "Latency", "ApiName", "fortune", "Resource", "/fortune/es", "Stage", "prod", "Method", "GET", { "visible": false, "color": "#2ca02c" } ],
+                    [ "...", "/fortune/redis", ".", ".", ".", ".", { "visible": false } ],
+                    [ "...", "/fortune/sql", ".", ".", ".", ".", { "color": "#1f77b4", "stat": "p99" } ],
+                    [ "...", { "color": "#808080", "stat": "p50" } ]
+                ],
+                "period": 300,
+                "stat": "Sum",
+                "region": "ap-southeast-1",
+                "view": "timeSeries",
+                "stacked": false,
+                "title": "BlueService Latency"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 6,
+            "y": 8,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "AWS/ApiGateway", "Latency", "ApiName", "fortune", "Resource", "/fortune/redis", "Stage", "prod", "Method", "GET", { "color": "#d62728" } ],
+                    [ "...", "/fortune/es", ".", ".", ".", ".", { "color": "#2ca02c" } ],
+                    [ "...", "/fortune/sql", ".", ".", ".", ".", { "color": "#1f77b4" } ]
+                ],
+                "period": 300,
+                "stat": "p90",
+                "region": "ap-southeast-1",
+                "view": "timeSeries",
+                "stacked": false,
+                "title": "Services p90 Latency"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 6,
+            "y": 15,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "AWS/ApiGateway", "Latency", "ApiName", "fortune", "Resource", "/fortune/es", "Stage", "prod", "Method", "GET", { "color": "#2ca02c", "visible": false } ],
+                    [ "...", "/fortune/redis", ".", ".", ".", ".", { "color": "#d62728" } ],
+                    [ "...", "/fortune/sql", ".", ".", ".", ".", { "color": "#1f77b4", "visible": false } ],
+                    [ "...", "/fortune/redis", ".", ".", ".", ".", { "stat": "p50", "color": "#808080" } ]
+                ],
+                "period": 300,
+                "stat": "p99",
+                "region": "ap-southeast-1",
+                "view": "timeSeries",
+                "stacked": false,
+                "title": "RedService Latency",
+                "annotations": {
+                    "horizontal": [
+                        {
+                            "label": "Alarm",
+                            "value": 150
+                        }
+                    ]
+                },
+                "yAxis": {
+                    "left": {
+                        "max": 500
+                    }
+                }
+            }
+        },
+        {
+            "type": "metric",
+            "x": 6,
+            "y": 21,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "AWS/ApiGateway", "Latency", "ApiName", "fortune", "Resource", "/fortune/es", "Stage", "prod", "Method", "GET", { "color": "#2ca02c", "stat": "p99" } ],
+                    [ "...", "/fortune/redis", ".", ".", ".", ".", { "visible": false } ],
+                    [ "...", "/fortune/sql", ".", ".", ".", ".", { "color": "#1f77b4", "visible": false } ],
+                    [ "...", "/fortune/es", ".", ".", ".", ".", { "stat": "p50", "color": "#909090" } ]
+                ],
+                "period": 300,
+                "stat": "Sum",
+                "region": "ap-southeast-1",
+                "view": "timeSeries",
+                "stacked": false,
+                "title": "GreenService Latency",
+                "setPeriodToTimeRange": true
+            }
+        },
+        {
+            "type": "metric",
+            "x": 18,
+            "y": 27,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "AWS/ApiGateway", "5XXError", "ApiName", "fortune", "Resource", "/fortune/sql", "Stage", "prod", "Method", "GET" ],
+                    [ "...", "/fortune/redis", ".", ".", ".", ".", { "color": "#d62728", "visible": false } ],
+                    [ "...", "/fortune/es", ".", ".", ".", ".", { "visible": false } ]
+                ],
+                "period": 300,
+                "stat": "Sum",
+                "region": "ap-southeast-1",
+                "view": "timeSeries",
+                "stacked": false,
+                "title": "BlueService Faults (5xx)"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 12,
+            "y": 27,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "AWS/ApiGateway", "4XXError", "ApiName", "fortune", "Resource", "/fortune/redis", "Stage", "prod", "Method", "GET", { "color": "#d62728", "visible": false } ],
+                    [ "...", "/fortune/es", ".", ".", ".", ".", { "color": "#2ca02c", "visible": false } ],
+                    [ "...", "/fortune/sql", ".", ".", ".", ".", { "color": "#1f77b4" } ]
+                ],
+                "period": 300,
+                "stat": "Sum",
+                "region": "ap-southeast-1",
+                "view": "timeSeries",
+                "stacked": false,
+                "title": "BlueService Errors (4xx)"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 12,
+            "y": 8,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "AWS/ApiGateway", "4XXError", "ApiName", "fortune", "Resource", "/fortune/redis", "Stage", "prod", "Method", "GET", { "color": "#d62728" } ],
+                    [ "...", "/fortune/es", ".", ".", ".", ".", { "color": "#2ca02c" } ],
+                    [ "...", "/fortune/sql", ".", ".", ".", ".", { "color": "#1f77b4" } ]
+                ],
+                "period": 300,
+                "stat": "Sum",
+                "region": "ap-southeast-1",
+                "view": "timeSeries",
+                "stacked": false,
+                "title": "Services Errors (4xx)"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 18,
+            "y": 8,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "AWS/ApiGateway", "5XXError", "ApiName", "fortune", "Resource", "/fortune/sql", "Stage", "prod", "Method", "GET" ],
+                    [ "...", "/fortune/redis", ".", ".", ".", ".", { "color": "#d62728" } ],
+                    [ "...", "/fortune/es", ".", ".", ".", "." ]
+                ],
+                "period": 300,
+                "stat": "Sum",
+                "region": "ap-southeast-1",
+                "view": "timeSeries",
+                "stacked": false,
+                "title": "Services Faults (5xx)"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 12,
+            "y": 21,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "AWS/ApiGateway", "4XXError", "ApiName", "fortune", "Resource", "/fortune/redis", "Stage", "prod", "Method", "GET", { "color": "#d62728", "visible": false } ],
+                    [ "...", "/fortune/es", ".", ".", ".", ".", { "color": "#2ca02c" } ],
+                    [ "...", "/fortune/sql", ".", ".", ".", ".", { "color": "#1f77b4", "visible": false } ]
+                ],
+                "period": 300,
+                "stat": "Sum",
+                "region": "ap-southeast-1",
+                "view": "timeSeries",
+                "stacked": false,
+                "title": "GreenService Errors (4xx)"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 12,
+            "y": 15,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "AWS/ApiGateway", "4XXError", "ApiName", "fortune", "Resource", "/fortune/redis", "Stage", "prod", "Method", "GET", { "color": "#d62728" } ],
+                    [ "...", "/fortune/es", ".", ".", ".", ".", { "color": "#2ca02c", "visible": false } ],
+                    [ "...", "/fortune/sql", ".", ".", ".", ".", { "color": "#1f77b4", "visible": false } ]
+                ],
+                "period": 300,
+                "stat": "Sum",
+                "region": "ap-southeast-1",
+                "view": "timeSeries",
+                "stacked": false,
+                "title": "RedService Errors (4xx)",
+                "yAxis": {
+                    "left": {
+                        "label": ""
+                    }
+                },
+                "annotations": {
+                    "horizontal": [
+                        {
+                            "label": "Alarm",
+                            "value": 1
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "metric",
+            "x": 18,
+            "y": 21,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "AWS/ApiGateway", "5XXError", "ApiName", "fortune", "Resource", "/fortune/sql", "Stage", "prod", "Method", "GET", { "visible": false } ],
+                    [ "...", "/fortune/redis", ".", ".", ".", ".", { "color": "#d62728", "visible": false } ],
+                    [ "...", "/fortune/es", ".", ".", ".", "." ]
+                ],
+                "period": 300,
+                "stat": "Sum",
+                "region": "ap-southeast-1",
+                "view": "timeSeries",
+                "stacked": false,
+                "title": "GreenService Faults (5xx)"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 18,
+            "y": 15,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "AWS/ApiGateway", "5XXError", "ApiName", "fortune", "Resource", "/fortune/sql", "Stage", "prod", "Method", "GET", { "visible": false } ],
+                    [ "...", "/fortune/redis", ".", ".", ".", ".", { "color": "#d62728" } ],
+                    [ "...", "/fortune/es", ".", ".", ".", ".", { "visible": false } ]
+                ],
+                "period": 300,
+                "stat": "Sum",
+                "region": "ap-southeast-1",
+                "view": "timeSeries",
+                "stacked": false,
+                "title": "RedService Faults (5xx)",
+                "annotations": {
+                    "horizontal": [
+                        {
+                            "label": "Alarm",
+                            "value": 1
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "text",
+            "x": 0,
+            "y": 0,
+            "width": 24,
+            "height": 2,
+            "properties": {
+                "markdown": "\n# Fortune Service Health Dashboard\n## Overall Service Health\n"
+            }
+        },
+        {
+            "type": "text",
+            "x": 0,
+            "y": 14,
+            "width": 24,
+            "height": 1,
+            "properties": {
+                "markdown": "\n## Individual Services Health\n"
+            }
+        },
+        {
+            "type": "text",
+            "x": 0,
+            "y": 40,
+            "width": 24,
+            "height": 2,
+            "properties": {
+                "markdown": "\n## Notes\n[button:Diagnostics Dashboard](#dashboards:name=fortune-diagnostic) \n"
+            }
+        },
+        {
+            "type": "text",
+            "x": 0,
+            "y": 33,
+            "width": 24,
+            "height": 1,
+            "properties": {
+                "markdown": "\n## Canaries\n"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 12,
+            "y": 34,
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "CloudWatchSynthetics", "Duration", "CanaryName", "fortune-api", { "id": "m1" } ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "ap-southeast-1",
+                "stat": "Average",
+                "period": 300,
+                "title": "Canary latency"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 34,
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "CloudWatchSynthetics", "Duration", "CanaryName", "fortune-api", { "id": "m1", "visible": false } ],
+                    [ ".", "SuccessPercent", ".", ".", { "id": "m2", "color": "#2ca02c" } ],
+                    [ ".", "Failed requests", ".", ".", { "id": "m3", "color": "#d62728", "visible": false } ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "ap-southeast-1",
+                "stat": "Average",
+                "period": 300,
+                "title": "Canary success/fail"
+            }
+        }
+    ]
+}

@@ -1,10 +1,10 @@
 from aws_cdk import (
-    # aws_s3 as s3,
     # aws_cognito as cognito,
     aws_autoscaling as autoscaling,
     aws_ec2 as ec2,
     aws_elasticloadbalancingv2 as elbv2,
     aws_iam as iam,
+    aws_ssm as ssm,
     core
 )
 import logging
@@ -77,3 +77,11 @@ class Ec2Stack(core.Stack):
         # asg.scale_on_outgoing_bytes(id="ScaleOnNetworkOut", target_bytes_per_second=100000)
         core.CfnOutput(self,"NetworkLoadBalancer",export_name="NetworkLoadBalancer",value=nlb.load_balancer_dns_name)
 
+        ## Problem: CDK changes the SSM Parameter name, appends unique suffix. 
+        ## SSM_CLOUDWATCH_AGENT_PARAMETER_KEY="/fortune/CloudWatchAgentConfig-linux"
+        #cloudwatch_agent_config_json = open("./fortune/cloudwatch_agent_config.json", "rb").read().decode("UTF-8")
+        #print("cloudwatch_agent_config_json: " + cloudwatch_agent_config_json)
+        #ssm.StringParameter(self, SSM_CLOUDWATCH_AGENT_PARAMETER_KEY,
+        #    description="CloudWatch Agent config for Fortune app",
+        #    string_value=cloudwatch_agent_config_json
+        #)

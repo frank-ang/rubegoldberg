@@ -6,7 +6,7 @@ yum install httpd -y
 # enable and start httpd
 systemctl enable httpd
 systemctl start httpd
-# dummy web server page, will be disabled by CodeDeploy.
+# dummy web server page, should be disabled by subsequent app deployment.
 echo "<html><head><title> Example Web Server</title></head>" >  /var/www/html/index.html
 echo "<body>" >>  /var/www/html/index.html
 echo "<div><center><h2>Welcome AWS $(hostname -f) </h2>" >>  /var/www/html/index.html
@@ -22,9 +22,9 @@ chmod +x ./install
 ./install auto
 
 # CloudWatch Agent
-sudo yum install amazon-cloudwatch-agent
-## Uncomment the following to auto-start the CW agent. Enable only after configuring the CloudWatch configuration into SSM parameter store
-sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c ssm:AmazonCloudWatch-linux-fortune
+yum install -y amazon-cloudwatch-agent
+## Auto-start the CW agent. Depends on the CloudWatch configuration in SSM parameter store
+/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c ssm:AmazonCloudWatch-linux-fortune
 
 # XRay Agent
 curl https://s3.ap-southeast-1.amazonaws.com/aws-xray-assets.ap-southeast-1/xray-daemon/aws-xray-daemon-3.x.rpm -o /home/ec2-user/xray.rpm

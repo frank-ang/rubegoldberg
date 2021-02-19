@@ -1,0 +1,497 @@
+{
+    "widgets": [
+        {
+            "type": "text",
+            "x": 0,
+            "y": 0,
+            "width": 24,
+            "height": 3,
+            "properties": {
+                "markdown": "\n# Fortune Service Diagnostics\n[button:Fortune Health](#dashboards:name=fortune-health)\n## Network Diagnostics\n"
+            }
+        },
+        {
+            "type": "text",
+            "x": 0,
+            "y": 9,
+            "width": 24,
+            "height": 1,
+            "properties": {
+                "markdown": "\n## Compute Diagnostics\n"
+            }
+        },
+        {
+            "type": "text",
+            "x": 0,
+            "y": 22,
+            "width": 24,
+            "height": 1,
+            "properties": {
+                "markdown": "\n## Database Diagnostics\n"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 12,
+            "y": 3,
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "AWS/NetworkELB", "NewFlowCount", "LoadBalancer", "net/fortu-Fortu-1BYA6IJDQU6LA/4bbabe8e7c0d258f", { "id": "m0r3", "color": "#17becf" } ],
+                    [ ".", "ActiveFlowCount", ".", ".", { "id": "m1", "color": "#9467bd" } ]
+                ],
+                "region": "ap-southeast-1",
+                "title": "Load Balancer Connections",
+                "copilot": true,
+                "legend": {
+                    "position": "bottom"
+                },
+                "view": "timeSeries",
+                "stacked": false,
+                "stat": "Sum",
+                "period": 300
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 3,
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "AWS/NetworkELB", "ProcessedBytes", "LoadBalancer", "net/fortu-Fortu-1BYA6IJDQU6LA/4bbabe8e7c0d258f", { "id": "m2", "yAxis": "left", "color": "#ff7f0e" } ]
+                ],
+                "region": "ap-southeast-1",
+                "title": "Load Balancer Bytes",
+                "copilot": true,
+                "legend": {
+                    "position": "bottom"
+                },
+                "view": "timeSeries",
+                "stacked": false,
+                "stat": "Sum",
+                "period": 300
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 10,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "view": "timeSeries",
+                "stacked": false,
+                "metrics": [
+                    [ "AWS/EC2", "CPUUtilization", "AutoScalingGroupName", "fortune-app-ASG46ED3070-JEY9XQPWYG4Z" ]
+                ],
+                "title": "CPU Utilization (Percent)",
+                "region": "ap-southeast-1",
+                "period": 60
+            }
+        },
+        {
+            "type": "metric",
+            "x": 18,
+            "y": 10,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "view": "timeSeries",
+                "stacked": false,
+                "metrics": [
+                    [ "AWS/EC2", "NetworkOut", "AutoScalingGroupName", "fortune-app-ASG46ED3070-JEY9XQPWYG4Z" ]
+                ],
+                "title": "Network Out (Bytes)",
+                "region": "ap-southeast-1",
+                "period": 60,
+                "start": "-PT12H",
+                "end": "P0D"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 12,
+            "y": 10,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "AWS/EC2", "NetworkIn", "AutoScalingGroupName", "fortune-app-ASG46ED3070-JEY9XQPWYG4Z" ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "title": "Network In (Bytes)",
+                "region": "ap-southeast-1",
+                "period": 60,
+                "start": "-PT12H",
+                "end": "P0D",
+                "stat": "Average"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 16,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "view": "timeSeries",
+                "stacked": false,
+                "metrics": [
+                    [ "AWS/AutoScaling", "GroupInServiceInstances", "AutoScalingGroupName", "fortune-app-ASG46ED3070-JEY9XQPWYG4Z" ]
+                ],
+                "title": "In Service Instances (Count)",
+                "region": "ap-southeast-1",
+                "period": 60,
+                "start": "-PT3H",
+                "end": "P0D"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 6,
+            "y": 16,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "AWS/AutoScaling", "GroupStandbyInstances", "AutoScalingGroupName", "fortune-app-ASG46ED3070-JEY9XQPWYG4Z" ],
+                    [ ".", "GroupTerminatingInstances", ".", "." ],
+                    [ ".", "GroupPendingInstances", ".", "." ],
+                    [ ".", "GroupInServiceInstances", ".", "." ]
+                ],
+                "view": "timeSeries",
+                "stacked": true,
+                "title": "Instances By State",
+                "region": "ap-southeast-1",
+                "period": 60,
+                "stat": "Average",
+                "start": "-PT3H",
+                "end": "P0D"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 18,
+            "y": 24,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "region": "ap-southeast-1",
+                "metrics": [
+                    [ "AWS/ElastiCache", "ReplicationLag", "CacheClusterId", "redis00-001", { "stat": "Average", "id": "m0r0" } ],
+                    [ "...", "redis00-002", { "stat": "Average", "id": "m0r1" } ],
+                    [ "...", "redis00-003", { "stat": "Average", "id": "m0r2" } ]
+                ],
+                "title": "Replication Lag Average",
+                "copilot": true,
+                "legend": {
+                    "position": "bottom"
+                },
+                "start": "-PT3H",
+                "end": "P0D",
+                "view": "timeSeries",
+                "stacked": false
+            }
+        },
+        {
+            "type": "metric",
+            "x": 12,
+            "y": 24,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "region": "ap-southeast-1",
+                "metrics": [
+                    [ "AWS/ElastiCache", "CacheHits", "CacheClusterId", "redis00-001", { "stat": "Sum", "id": "m0r0" } ],
+                    [ "...", "redis00-002", { "stat": "Sum", "id": "m0r1" } ],
+                    [ "...", "redis00-003", { "stat": "Sum", "id": "m0r2" } ]
+                ],
+                "title": "Cache Hits Sum",
+                "copilot": true,
+                "legend": {
+                    "position": "bottom"
+                },
+                "start": "-PT3H",
+                "end": "P0D",
+                "view": "timeSeries",
+                "stacked": false
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 24,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "region": "ap-southeast-1",
+                "metrics": [
+                    [ "AWS/ElastiCache", "CurrConnections", "CacheClusterId", "redis00-001", { "stat": "Sum", "id": "m0r0" } ],
+                    [ "...", "redis00-002", { "stat": "Sum", "id": "m0r1" } ],
+                    [ "...", "redis00-003", { "stat": "Sum", "id": "m0r2" } ]
+                ],
+                "title": "Current Connections",
+                "copilot": true,
+                "legend": {
+                    "position": "bottom"
+                },
+                "start": "-PT3H",
+                "end": "P0D",
+                "view": "timeSeries",
+                "stacked": false
+            }
+        },
+        {
+            "type": "metric",
+            "x": 6,
+            "y": 24,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "region": "ap-southeast-1",
+                "metrics": [
+                    [ "AWS/ElastiCache", "NetworkBytesOut", "CacheClusterId", "redis00-001", { "stat": "Average", "id": "m0r0" } ],
+                    [ "...", "redis00-002", { "stat": "Average", "id": "m0r1" } ],
+                    [ "...", "redis00-003", { "stat": "Average", "id": "m0r2" } ]
+                ],
+                "title": "Network Bytes Out Average",
+                "copilot": true,
+                "legend": {
+                    "position": "bottom"
+                },
+                "start": "-PT3H",
+                "end": "P0D",
+                "view": "timeSeries",
+                "stacked": false
+            }
+        },
+        {
+            "type": "text",
+            "x": 0,
+            "y": 23,
+            "width": 24,
+            "height": 1,
+            "properties": {
+                "markdown": "\n### ElastiCache Redis\n"
+            }
+        },
+        {
+            "type": "text",
+            "x": 0,
+            "y": 30,
+            "width": 24,
+            "height": 1,
+            "properties": {
+                "markdown": "\n### RDS Aurora MySQL Serverless\n"
+            }
+        },
+        {
+            "type": "text",
+            "x": 0,
+            "y": 37,
+            "width": 24,
+            "height": 1,
+            "properties": {
+                "markdown": "\n### Elasticsearch\n"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 6,
+            "y": 31,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "AWS/RDS", "CPUUtilization", "DBClusterIdentifier", "service-mysql-serverless", { "stat": "Average", "id": "m0r1" } ]
+                ],
+                "region": "ap-southeast-1",
+                "title": "CPU Utilization Average",
+                "copilot": true,
+                "legend": {
+                    "position": "bottom"
+                },
+                "view": "timeSeries",
+                "stacked": false,
+                "period": 300
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 31,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "AWS/RDS", "DatabaseConnections", "DBClusterIdentifier", "service-mysql-serverless", { "id": "m0r1" } ]
+                ],
+                "region": "ap-southeast-1",
+                "title": "Database Connections Sum",
+                "copilot": true,
+                "legend": {
+                    "position": "bottom"
+                },
+                "view": "timeSeries",
+                "stacked": false,
+                "period": 300,
+                "stat": "Sum"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 12,
+            "y": 31,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "AWS/RDS", "ReadLatency", "DBClusterIdentifier", "service-mysql-serverless", { "stat": "Average", "id": "m0r1" } ]
+                ],
+                "region": "ap-southeast-1",
+                "title": "Read Latency Average",
+                "copilot": true,
+                "start": "-P1D",
+                "legend": {
+                    "position": "bottom"
+                },
+                "end": "P0D",
+                "view": "timeSeries",
+                "stacked": false,
+                "period": 300
+            }
+        },
+        {
+            "type": "metric",
+            "x": 18,
+            "y": 31,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "AWS/RDS", "WriteLatency", "DBClusterIdentifier", "service-mysql-serverless", { "stat": "Average", "id": "m0r1" } ]
+                ],
+                "region": "ap-southeast-1",
+                "title": "Write Latency Average",
+                "copilot": true,
+                "legend": {
+                    "position": "bottom"
+                },
+                "view": "timeSeries",
+                "stacked": false,
+                "period": 300
+            }
+        },
+        {
+            "type": "metric",
+            "x": 18,
+            "y": 38,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "region": "ap-southeast-1",
+                "metrics": [
+                    [ "AWS/ES", "JVMMemoryPressure", "ClientId", "450428438179", "DomainName", "sandbox00", { "stat": "Maximum", "id": "m0r0" } ]
+                ],
+                "title": "JVM Memory Pressure Maximum",
+                "copilot": true,
+                "legend": {
+                    "position": "bottom"
+                },
+                "start": "-P1D",
+                "end": "P0D",
+                "view": "timeSeries",
+                "stacked": false
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 38,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "region": "ap-southeast-1",
+                "metrics": [
+                    [ "AWS/ES", "ElasticsearchRequests", "ClientId", "450428438179", "DomainName", "sandbox00", { "stat": "Sum", "id": "m0r0" } ]
+                ],
+                "title": "Elasticsearch Requests Sum",
+                "copilot": true,
+                "legend": {
+                    "position": "bottom"
+                },
+                "start": "-PT3H",
+                "end": "P0D",
+                "view": "timeSeries",
+                "stacked": false
+            }
+        },
+        {
+            "type": "metric",
+            "x": 6,
+            "y": 38,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "region": "ap-southeast-1",
+                "metrics": [
+                    [ "AWS/ES", "CPUUtilization", "ClientId", "450428438179", "DomainName", "sandbox00", { "stat": "Average", "id": "m0r0" } ]
+                ],
+                "title": "CPU Utilization Average",
+                "copilot": true,
+                "legend": {
+                    "position": "bottom"
+                },
+                "start": "-P1D",
+                "end": "P0D",
+                "view": "timeSeries",
+                "stacked": false
+            }
+        },
+        {
+            "type": "metric",
+            "x": 12,
+            "y": 38,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "region": "ap-southeast-1",
+                "metrics": [
+                    [ "AWS/ES", "SearchableDocuments", "ClientId", "450428438179", "DomainName", "sandbox00", { "stat": "Average", "id": "m0r0" } ]
+                ],
+                "title": "Searchable Documents Average",
+                "copilot": true,
+                "legend": {
+                    "position": "bottom"
+                },
+                "start": "-P1D",
+                "end": "P0D",
+                "view": "timeSeries",
+                "stacked": false
+            }
+        },
+        {
+            "type": "metric",
+            "x": 6,
+            "y": 10,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "CWAgent", "mem_used_percent", "InstanceId", "i-0625d5ef9e9268e44", "AutoScalingGroupName", "fortune-app-ASG46ED3070-JEY9XQPWYG4Z", "ImageId", "ami-0e2e44c03b85f58b3", "InstanceType", "t3.micro", { "id": "m1" } ],
+                    [ ".", "swap_used_percent", ".", ".", ".", ".", ".", ".", ".", ".", { "id": "m2" } ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "ap-southeast-1",
+                "stat": "Maximum",
+                "period": 300,
+                "title": "Memory"
+            }
+        }
+    ]
+}
