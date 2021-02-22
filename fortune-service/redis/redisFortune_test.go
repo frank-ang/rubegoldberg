@@ -3,6 +3,7 @@ package redis
 // To run:
 // go test -v fortune/redis
 import (
+	"context"
 	"testing"
 )
 
@@ -17,7 +18,8 @@ func TestGetEndpoint(t *testing.T) {
 
 func TestRandomQuote(t *testing.T) {
 	t.Log("testing randomQuote...")
-	ret, _ := randomQuote()
+	var ctx = context.Background()
+	ret, _ := randomQuote(ctx)
 	if ret.Quote == "" {
 		t.Error("Expected non-null quote")
 	}

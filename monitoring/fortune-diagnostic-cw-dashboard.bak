@@ -32,7 +32,7 @@
         },
         {
             "type": "metric",
-            "x": 12,
+            "x": 0,
             "y": 3,
             "width": 12,
             "height": 6,
@@ -55,9 +55,9 @@
         },
         {
             "type": "metric",
-            "x": 0,
+            "x": 12,
             "y": 3,
-            "width": 12,
+            "width": 6,
             "height": 6,
             "properties": {
                 "metrics": [
@@ -77,100 +77,65 @@
         },
         {
             "type": "metric",
+            "x": 12,
+            "y": 16,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ { "expression": "SEARCH('{AWS/EC2,AutoScalingGroupName} MetricName=\"NetworkPacketsOut\" OR MetricName=\"NetworkPacketsIn\" ', 'Average', 300)", "id": "e1", "period": 300, "region": "ap-southeast-1", "label": "" } ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "title": "Network In/Out Packets",
+                "region": "ap-southeast-1",
+                "period": 300,
+                "stat": "Average",
+                "yAxis": {
+                    "left": {
+                        "label": "Packets",
+                        "showUnits": false
+                    }
+                }
+            }
+        },
+        {
+            "type": "metric",
             "x": 0,
             "y": 10,
-            "width": 6,
+            "width": 12,
             "height": 6,
             "properties": {
                 "view": "timeSeries",
                 "stacked": false,
                 "metrics": [
-                    [ "AWS/EC2", "CPUUtilization", "AutoScalingGroupName", "fortune-app-ASG46ED3070-JEY9XQPWYG4Z" ]
+                    [ "AWS/AutoScaling", "GroupInServiceInstances", "AutoScalingGroupName", "fortune-app-ASG46ED3070-JEY9XQPWYG4Z" ],
+                    [ ".", "GroupDesiredCapacity", ".", "." ]
                 ],
-                "title": "CPU Utilization (Percent)",
+                "title": "In Service Instances (Count)",
                 "region": "ap-southeast-1",
                 "period": 60
             }
         },
         {
             "type": "metric",
-            "x": 18,
-            "y": 10,
-            "width": 6,
-            "height": 6,
-            "properties": {
-                "view": "timeSeries",
-                "stacked": false,
-                "metrics": [
-                    [ "AWS/EC2", "NetworkOut", "AutoScalingGroupName", "fortune-app-ASG46ED3070-JEY9XQPWYG4Z" ]
-                ],
-                "title": "Network Out (Bytes)",
-                "region": "ap-southeast-1",
-                "period": 60,
-                "start": "-PT12H",
-                "end": "P0D"
-            }
-        },
-        {
-            "type": "metric",
             "x": 12,
             "y": 10,
-            "width": 6,
+            "width": 12,
             "height": 6,
             "properties": {
                 "metrics": [
-                    [ "AWS/EC2", "NetworkIn", "AutoScalingGroupName", "fortune-app-ASG46ED3070-JEY9XQPWYG4Z" ]
-                ],
-                "view": "timeSeries",
-                "stacked": false,
-                "title": "Network In (Bytes)",
-                "region": "ap-southeast-1",
-                "period": 60,
-                "start": "-PT12H",
-                "end": "P0D",
-                "stat": "Average"
-            }
-        },
-        {
-            "type": "metric",
-            "x": 0,
-            "y": 16,
-            "width": 6,
-            "height": 6,
-            "properties": {
-                "view": "timeSeries",
-                "stacked": false,
-                "metrics": [
-                    [ "AWS/AutoScaling", "GroupInServiceInstances", "AutoScalingGroupName", "fortune-app-ASG46ED3070-JEY9XQPWYG4Z" ]
-                ],
-                "title": "In Service Instances (Count)",
-                "region": "ap-southeast-1",
-                "period": 60,
-                "start": "-PT3H",
-                "end": "P0D"
-            }
-        },
-        {
-            "type": "metric",
-            "x": 6,
-            "y": 16,
-            "width": 6,
-            "height": 6,
-            "properties": {
-                "metrics": [
-                    [ "AWS/AutoScaling", "GroupStandbyInstances", "AutoScalingGroupName", "fortune-app-ASG46ED3070-JEY9XQPWYG4Z" ],
-                    [ ".", "GroupTerminatingInstances", ".", "." ],
-                    [ ".", "GroupPendingInstances", ".", "." ],
-                    [ ".", "GroupInServiceInstances", ".", "." ]
+                    [ "AWS/AutoScaling", "GroupStandbyInstances", "AutoScalingGroupName", "fortune-app-ASG46ED3070-JEY9XQPWYG4Z", { "color": "#7f7f7f" } ],
+                    [ ".", "GroupTerminatingInstances", ".", ".", { "color": "#d62728" } ],
+                    [ ".", "GroupPendingInstances", ".", ".", { "color": "#ff7f0e" } ],
+                    [ ".", "GroupInServiceInstances", ".", ".", { "color": "#2ca02c" } ]
                 ],
                 "view": "timeSeries",
                 "stacked": true,
                 "title": "Instances By State",
                 "region": "ap-southeast-1",
                 "period": 60,
-                "stat": "Average",
-                "start": "-PT3H",
-                "end": "P0D"
+                "stat": "Average"
             }
         },
         {
@@ -477,20 +442,103 @@
         {
             "type": "metric",
             "x": 6,
-            "y": 10,
+            "y": 16,
             "width": 6,
             "height": 6,
             "properties": {
                 "metrics": [
-                    [ "CWAgent", "mem_used_percent", "InstanceId", "i-0625d5ef9e9268e44", "AutoScalingGroupName", "fortune-app-ASG46ED3070-JEY9XQPWYG4Z", "ImageId", "ami-0e2e44c03b85f58b3", "InstanceType", "t3.micro", { "id": "m1" } ],
-                    [ ".", "swap_used_percent", ".", ".", ".", ".", ".", ".", ".", ".", { "id": "m2" } ]
+                    [ { "expression": "SEARCH('{CWAgent,AutoScalingGroupName,ImageId,InstanceId,InstanceType} AutoScalingGroupName=\"fortune-app-ASG46ED3070-JEY9XQPWYG4Z\" MetricName=\"mem_used_percent\"', 'Average', 300)", "id": "e1", "period": 300, "region": "ap-southeast-1" } ],
+                    [ "CWAgent", "mem_used_percent", "InstanceId", "i-0ddd81e8f5dde36c9", "AutoScalingGroupName", "fortune-app-ASG46ED3070-JEY9XQPWYG4Z", "ImageId", "ami-0e2e44c03b85f58b3", "InstanceType", "t3.micro", { "id": "m1", "visible": false } ]
                 ],
                 "view": "timeSeries",
                 "stacked": false,
                 "region": "ap-southeast-1",
-                "stat": "Maximum",
+                "stat": "Average",
                 "period": 300,
-                "title": "Memory"
+                "title": "Memory Used (percent)"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 16,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ { "expression": "SEARCH('{AWS/EC2,InstanceId} cpuutilization NOT i-09c14b262d1607bad', 'Average', 300)", "id": "e2", "period": 300, "region": "ap-southeast-1" } ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "ap-southeast-1",
+                "stat": "Average",
+                "period": 300,
+                "title": "Compute CPU Utilization"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 18,
+            "y": 16,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "view": "timeSeries",
+                "stacked": false,
+                "metrics": [
+                    [ "AWS/EC2", "EBSWriteBytes", "AutoScalingGroupName", "fortune-app-ASG46ED3070-JEY9XQPWYG4Z" ],
+                    [ ".", "EBSReadBytes", ".", "." ]
+                ],
+                "region": "ap-southeast-1"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 18,
+            "y": 3,
+            "width": 6,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "AWS/NetworkELB", "HealthyHostCount", "TargetGroup", "targetgroup/fortu-Fortu-Y3MHRZGVSDKW/10a3d85ceb5a059b", "LoadBalancer", "net/fortu-Fortu-1BYA6IJDQU6LA/4bbabe8e7c0d258f", { "color": "#2ca02c" } ],
+                    [ ".", "UnHealthyHostCount", ".", ".", ".", ".", { "color": "#d62728" } ]
+                ],
+                "period": 60,
+                "region": "ap-southeast-1",
+                "stat": "Average",
+                "title": "Healthy Hosts",
+                "yAxis": {
+                    "left": {
+                        "min": 0
+                    }
+                },
+                "start": "-PT3H",
+                "end": "P0D",
+                "view": "timeSeries",
+                "stacked": false
+            }
+        },
+        {
+            "type": "log",
+            "x": 0,
+            "y": 45,
+            "width": 24,
+            "height": 6,
+            "properties": {
+                "query": "SOURCE 'fortune.out' | fields @timestamp, @message\n| sort @timestamp desc\n| limit 20",
+                "region": "ap-southeast-1",
+                "title": "Log group: fortune.out",
+                "view": "table"
+            }
+        },
+        {
+            "type": "text",
+            "x": 0,
+            "y": 44,
+            "width": 24,
+            "height": 1,
+            "properties": {
+                "markdown": "\n## Logs\n"
             }
         }
     ]

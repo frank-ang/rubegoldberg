@@ -44,11 +44,11 @@ func GetFortune(w http.ResponseWriter, req *http.Request) {
 	_, seg := xray.BeginSubsegment(req.Context(), "fortune.es.subsegment")
 	quote := randomQuote()
 	jsonQuote, err := json.MarshalIndent(&quote, "", "    ")
+	seg.Close(err)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	seg.Close(nil)
 	fmt.Fprintln(w, string(jsonQuote))
 }
 

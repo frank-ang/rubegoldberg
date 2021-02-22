@@ -44,7 +44,8 @@ class Ec2Stack(core.Stack):
             role=role,
             key_name=key_name,
             min_capacity=1,
-            max_capacity=2,
+            desired_capacity=2,
+            max_capacity=3,
             spot_price="0.0132", # TODO use Launch Template to setup Spot.
             security_group=app_sg,
             group_metrics=[autoscaling.GroupMetrics.all()],
@@ -77,11 +78,3 @@ class Ec2Stack(core.Stack):
         # asg.scale_on_outgoing_bytes(id="ScaleOnNetworkOut", target_bytes_per_second=100000)
         core.CfnOutput(self,"NetworkLoadBalancer",export_name="NetworkLoadBalancer",value=nlb.load_balancer_dns_name)
 
-        ## Problem: CDK changes the SSM Parameter name, appends unique suffix. 
-        ## SSM_CLOUDWATCH_AGENT_PARAMETER_KEY="/fortune/CloudWatchAgentConfig-linux"
-        #cloudwatch_agent_config_json = open("./fortune/cloudwatch_agent_config.json", "rb").read().decode("UTF-8")
-        #print("cloudwatch_agent_config_json: " + cloudwatch_agent_config_json)
-        #ssm.StringParameter(self, SSM_CLOUDWATCH_AGENT_PARAMETER_KEY,
-        #    description="CloudWatch Agent config for Fortune app",
-        #    string_value=cloudwatch_agent_config_json
-        #)

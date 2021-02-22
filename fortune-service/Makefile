@@ -41,7 +41,7 @@ test-health: start-xray
 test-mysql: tunnel-db
 	-./fortune -mysql &
 	while ! echo exit | nc -vz localhost 80; do sleep 2; done
-	-curl localhost
+	#-curl localhost
 	-curl localhost/fortune/sql
 	-killall fortune
 	-killall ssh
@@ -53,7 +53,7 @@ test-connect-mysql: tunnel-db
 test-es: tunnel-es
 	-./fortune -es &
 	while ! echo exit | nc -vz localhost 80; do sleep 2; done
-	-curl localhost
+	#-curl localhost
 	-curl localhost/fortune/es
 	-killall fortune
 	-killall ssh
@@ -62,10 +62,10 @@ test-connect-es: start-xray tunnel-es
 	-go test -v fortune/elasticsearch
 	-killall ssh
 
-test-redis: tunnel-redis
+test-redis: start-xray tunnel-redis
 	-./fortune -redis &
 	while ! echo exit | nc -vz localhost 80; do sleep 2; done
-	-curl localhost
+	# -curl localhost/health
 	-curl localhost/fortune/redis
 	-killall fortune
 	-killall ssh

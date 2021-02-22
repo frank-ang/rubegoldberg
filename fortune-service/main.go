@@ -20,7 +20,7 @@ func init() {
 	})
 }
 
-// Fortune. Returns a famous quote.
+// Fortune. Returns a famous quote..
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -34,24 +34,24 @@ func main() {
 	log.Printf("Flags: mysql=%t, redis=%t, elasticsearch=%t", *mysqlPtr, *redisPtr, *esPtr)
 
 	http.Handle("/",
-		xray.Handler(xray.NewFixedSegmentNamer("fortune"),
+		xray.Handler(xray.NewFixedSegmentNamer("fortune.root"),
 			http.HandlerFunc(Greeting)))
 	http.Handle("/health",
-		xray.Handler(xray.NewFixedSegmentNamer("fortune"),
+		xray.Handler(xray.NewFixedSegmentNamer("fortune.health"),
 			http.HandlerFunc(Greeting)))
 	if *mysqlPtr {
 		http.Handle("/fortune/sql",
-			xray.Handler(xray.NewFixedSegmentNamer("fortune"),
+			xray.Handler(xray.NewFixedSegmentNamer("fortune.sql"),
 				http.HandlerFunc(mysql.GetFortune)))
 	}
 	if *esPtr {
 		http.Handle("/fortune/es",
-			xray.Handler(xray.NewDynamicSegmentNamer("fortune.es", "*.amazonaws.com"),
+			xray.Handler(xray.NewFixedSegmentNamer("fortune.es"),
 				http.HandlerFunc(elasticsearch.GetFortune)))
 	}
 	if *redisPtr {
 		http.Handle("/fortune/redis",
-			xray.Handler(xray.NewDynamicSegmentNamer("fortune.redis", "*.amazonaws.com"),
+			xray.Handler(xray.NewFixedSegmentNamer("fortune.redis"),
 				http.HandlerFunc(redis.GetFortune)))
 	}
 	fmt.Println("Starting up on " + port)
@@ -61,11 +61,9 @@ func main() {
 }
 
 func Greeting(w http.ResponseWriter, req *http.Request) {
-	_, seg := xray.BeginSegment(req.Context(), "fortune.greeting")
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "GET")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 	fmt.Fprintln(w, "{ \"message\": \"Hello, Fortune!\" }")
-	seg.Close(nil)
 }
