@@ -168,7 +168,7 @@
                 "region": "ap-southeast-1",
                 "view": "timeSeries",
                 "stacked": false,
-                "title": "Services Volume",
+                "title": "Requests Volume",
                 "yAxis": {
                     "left": {
                         "min": 0
@@ -194,7 +194,20 @@
                 "region": "ap-southeast-1",
                 "view": "timeSeries",
                 "stacked": false,
-                "title": "BlueService Latency"
+                "title": "BlueService Latency",
+                "yAxis": {
+                    "left": {
+                        "max": 500
+                    }
+                },
+                "annotations": {
+                    "horizontal": [
+                        {
+                            "label": "alarm",
+                            "value": 300
+                        }
+                    ]
+                }
             }
         },
         {
@@ -270,7 +283,20 @@
                 "view": "timeSeries",
                 "stacked": false,
                 "title": "GreenService Latency",
-                "setPeriodToTimeRange": true
+                "setPeriodToTimeRange": true,
+                "annotations": {
+                    "horizontal": [
+                        {
+                            "label": "alarm",
+                            "value": 150
+                        }
+                    ]
+                },
+                "yAxis": {
+                    "left": {
+                        "max": 500
+                    }
+                }
             }
         },
         {
@@ -290,7 +316,15 @@
                 "region": "ap-southeast-1",
                 "view": "timeSeries",
                 "stacked": false,
-                "title": "BlueService Faults (5xx)"
+                "title": "BlueService Faults (5xx)",
+                "annotations": {
+                    "horizontal": [
+                        {
+                            "label": "alarm",
+                            "value": 3
+                        }
+                    ]
+                }
             }
         },
         {
@@ -310,7 +344,15 @@
                 "region": "ap-southeast-1",
                 "view": "timeSeries",
                 "stacked": false,
-                "title": "BlueService Errors (4xx)"
+                "title": "BlueService Errors (4xx)",
+                "annotations": {
+                    "horizontal": [
+                        {
+                            "label": "alarm",
+                            "value": 3
+                        }
+                    ]
+                }
             }
         },
         {
@@ -370,7 +412,15 @@
                 "region": "ap-southeast-1",
                 "view": "timeSeries",
                 "stacked": false,
-                "title": "GreenService Errors (4xx)"
+                "title": "GreenService Errors (4xx)",
+                "annotations": {
+                    "horizontal": [
+                        {
+                            "label": "alarm",
+                            "value": 3
+                        }
+                    ]
+                }
             }
         },
         {
@@ -400,7 +450,7 @@
                     "horizontal": [
                         {
                             "label": "Alarm",
-                            "value": 1
+                            "value": 3
                         }
                     ]
                 }
@@ -423,7 +473,15 @@
                 "region": "ap-southeast-1",
                 "view": "timeSeries",
                 "stacked": false,
-                "title": "GreenService Faults (5xx)"
+                "title": "GreenService Faults (5xx)",
+                "annotations": {
+                    "horizontal": [
+                        {
+                            "label": "alarm",
+                            "value": 3
+                        }
+                    ]
+                }
             }
         },
         {
@@ -448,7 +506,7 @@
                     "horizontal": [
                         {
                             "label": "Alarm",
-                            "value": 1
+                            "value": 3
                         }
                     ]
                 }
@@ -502,7 +560,10 @@
             "height": 6,
             "properties": {
                 "metrics": [
-                    [ "CloudWatchSynthetics", "Duration", "CanaryName", "fortune-api", { "id": "m1" } ]
+                    [ "CloudWatchSynthetics", "Duration", "CanaryName", "fortune-api", { "id": "m1", "color": "#7f7f7f" } ],
+                    [ "...", "fortune-es", { "color": "#2ca02c" } ],
+                    [ "...", "fortune-mysql", { "color": "#1f77b4" } ],
+                    [ "...", "fortune-redis" ]
                 ],
                 "view": "timeSeries",
                 "stacked": false,
@@ -520,14 +581,15 @@
             "height": 6,
             "properties": {
                 "metrics": [
-                    [ "CloudWatchSynthetics", "Duration", "CanaryName", "fortune-api", { "id": "m1", "visible": false } ],
-                    [ ".", "SuccessPercent", ".", ".", { "id": "m2", "color": "#2ca02c" } ],
-                    [ ".", "Failed requests", ".", ".", { "id": "m3", "color": "#d62728", "visible": false } ]
+                    [ "CloudWatchSynthetics", "SuccessPercent", "CanaryName", "fortune-es", { "color": "#2ca02c" } ],
+                    [ "...", "fortune-mysql", { "color": "#1f77b4" } ],
+                    [ "...", "fortune-redis", { "color": "#d62728" } ],
+                    [ "...", "fortune-api", { "color": "#7f7f7f" } ]
                 ],
                 "view": "timeSeries",
                 "stacked": false,
                 "region": "ap-southeast-1",
-                "stat": "Average",
+                "stat": "Maximum",
                 "period": 300,
                 "title": "Canary success/fail"
             }

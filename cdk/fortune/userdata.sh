@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Patch
+yum -y update
+
 # install httpd
 yum install httpd -y
 

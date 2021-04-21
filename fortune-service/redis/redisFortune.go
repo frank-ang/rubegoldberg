@@ -7,13 +7,16 @@ TODO: retries
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"math/rand"
 	"net/http"
 	"os"
+	"runtime/debug"
 	"time"
 
+	"github.com/aws/aws-xray-sdk-go/xray"
 	"github.com/go-redis/redis/v8"
 )
 
@@ -28,7 +31,26 @@ type Quote struct {
 
 func GetFortune(w http.ResponseWriter, req *http.Request) {
 	log.Print("Getting quote.")
-	quote, quoteErr := randomQuote()
+
+	var clientIP = req.Header.Get("x-forwarded-for")
+
+	// simulates unsupported parameter to return client error.
+	var operation = req.FormValue("op")
+	if operation != "" {
+		var errMsg = "ERROR|" + clientIP + "|Bad Request. Non-supported operation parameter: " + operation
+		simErr := errors.New(errMsg)
+		fmt.Println(simErr.Error())
+		debug.PrintStack()
+		http.Error(w, errMsg, 400)
+		return
+	}
+
+	var ctx = req.Context()
+	var subseg *xray.Segment
+	var err error
+	_, subseg = xray.BeginSubsegment(ctx, "fortune.redis.call")
+	quote, quoteErr := randomQuote(ctx)
+	subseg.Close(quoteErr)
 	if quoteErr != nil {
 		fmt.Println(quoteErr)
 		http.Error(w, quoteErr.Error(), 500)
@@ -48,10 +70,10 @@ func GetFortune(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprintln(w, string(jsonQuote))
 }
 
-func randomQuote() (Quote, error) {
+func randomQuote(ctx context.Context) (Quote, error) {
 	var q Quote
 	redisClient := getRedisClient()
-	var ctx = context.Background()
+	// var ctx = context.Background()
 	size64, sizeErr := redisClient.DBSize(ctx).Result()
 	if sizeErr != nil {
 		return q, sizeErr
@@ -61,6 +83,7 @@ func randomQuote() (Quote, error) {
 	id := int(rand.Intn(size))
 	log.Print("DBSize: ", size, ", random ID:", id)
 	key := fmt.Sprint("quote:", id)
+	var err error
 	val, err := redisClient.HGetAll(ctx, key).Result()
 	if err != nil {
 		return q, err
