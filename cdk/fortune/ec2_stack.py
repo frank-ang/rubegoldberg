@@ -44,7 +44,7 @@ class Ec2Stack(core.Stack):
             role=role,
             key_name=key_name,
             min_capacity=1,
-            desired_capacity=2,
+            desired_capacity=1,
             max_capacity=3,
             spot_price="0.0132", # TODO use Launch Template to setup Spot.
             security_group=app_sg,

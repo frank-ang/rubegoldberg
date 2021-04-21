@@ -20,7 +20,7 @@ func init() {
 	})
 }
 
-// Fortune. Returns a famous quote..
+// Fortune. Returns a famous quote.
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {

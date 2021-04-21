@@ -7,11 +7,13 @@ TODO: retries
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"math/rand"
 	"net/http"
 	"os"
+	"runtime/debug"
 	"time"
 
 	"github.com/aws/aws-xray-sdk-go/xray"
@@ -29,6 +31,20 @@ type Quote struct {
 
 func GetFortune(w http.ResponseWriter, req *http.Request) {
 	log.Print("Getting quote.")
+
+	var clientIP = req.Header.Get("x-forwarded-for")
+
+	// simulates unsupported parameter to return client error.
+	var operation = req.FormValue("op")
+	if operation != "" {
+		var errMsg = "ERROR|" + clientIP + "|Bad Request. Non-supported operation parameter: " + operation
+		simErr := errors.New(errMsg)
+		fmt.Println(simErr.Error())
+		debug.PrintStack()
+		http.Error(w, errMsg, 400)
+		return
+	}
+
 	var ctx = req.Context()
 	var subseg *xray.Segment
 	var err error

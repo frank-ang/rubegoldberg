@@ -10,11 +10,13 @@ import (
 	"context"
 	"crypto/tls"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"reflect"
+	"runtime/debug"
 	"strconv"
 	"strings"
 
@@ -41,6 +43,20 @@ type Quote struct {
 // GetFortune writes fortune into response.
 func GetFortune(w http.ResponseWriter, req *http.Request) {
 	log.Print("Getting quote.")
+
+	var clientIP = req.Header.Get("x-forwarded-for")
+
+	// simulates unsupported parameter to return client error.
+	var operation = req.FormValue("op")
+	if operation != "" {
+		var errMsg = "ERROR|" + clientIP + "|Bad Request. Non-supported operation parameter: " + operation
+		simErr := errors.New(errMsg)
+		fmt.Println(simErr.Error())
+		debug.PrintStack()
+		http.Error(w, errMsg, 400)
+		return
+	}
+
 	_, seg := xray.BeginSubsegment(req.Context(), "fortune.es.subsegment")
 	quote := randomQuote()
 	jsonQuote, err := json.MarshalIndent(&quote, "", "    ")

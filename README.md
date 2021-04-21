@@ -83,17 +83,17 @@ Setup HTTP API here [./fortune-api](./fortune-api)
 
 
 
-OPTIONAL:
+## TODOs:
 * CloudWatch Sythetics Canary Recorder Chrome plugin + Amplify client
-
 * Additional runtimes
     * ECS Runtime
     * Lambda
     * Step Functions
-
-* [BLOCKED] Cloudwatch Embedded Metric Format. supports Python,Node,Java, not Golang.
-
-TODO: yadda.
+* Cloudwatch Embedded Metric Format. supports Python,Node,Java, not Golang.
+* Improve error handling / retries, to recover gracefully and avoid crashes. Diagnostic logs:
+    * ElasticSearch handler possibly hangs after message: "Error parsing the response body: invalid character '}' looking for beginning of object key string"
+    * ElasticSearch handler possibly hangs after message: "doc _source: map[string]interface {}"
+    * Redis handler possibly hangs after message: "DBSize: XXXXXX, random ID:YYYYYY"
 
 ## Footnote
 

@@ -15,6 +15,8 @@ help:
 
 # BUILD
 
+build: build-mac build-linux
+
 build-linux:
 	env GOOS=linux go build -o fortune-linux
 

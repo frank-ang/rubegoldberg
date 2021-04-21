@@ -8,6 +8,7 @@ require (
 	github.com/aws/aws-xray-sdk-go v1.2.0
 	github.com/cihub/seelog v0.0.0-20170130134532-f561c5e57575 // indirect
 	github.com/elastic/go-elasticsearch/v7 v7.0.0
+	github.com/go-errors/errors v1.1.1
 	github.com/go-ole/go-ole v1.2.5 // indirect
 	github.com/go-redis/redis/v8 v8.0.0-beta.6
 	github.com/go-sql-driver/mysql v1.5.0
