@@ -61,7 +61,7 @@ test-es: tunnel-es
 	-killall ssh
 
 test-connect-es: start-xray tunnel-es
-	-go test -v fortune/elasticsearch
+	#-go test -v fortune/elasticsearch
 	-killall ssh
 
 test-redis: start-xray tunnel-redis
