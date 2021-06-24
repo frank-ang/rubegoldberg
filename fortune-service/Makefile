@@ -1,4 +1,5 @@
 # Fortune Application
+# Makefile for build and test of non-container application
 include ../config/config.gitignore
 export AWS_REGION:=ap-southeast-1
 export DB_SECRET_NAME:=service/db/mysql
@@ -22,6 +23,9 @@ build-linux:
 
 build-mac:
 	go build
+
+build-docker:
+	docker build -t fortune .
 
 # TEST
 start-xray: 
