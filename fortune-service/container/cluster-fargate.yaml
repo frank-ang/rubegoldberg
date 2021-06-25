@@ -1,0 +1,41 @@
+# An example of ClusterConfig with a Fargate profile in existing VPC
+---
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: fortune-cluster
+  region: ap-southeast-1
+
+vpc:
+  subnets:
+    private:
+      ap-southeast-1a: { id: subnet-0710949567ad9c137 }
+      ap-southeast-1b: { id: subnet-087cab3c1ff95f18e }
+      ap-southeast-1c: { id: 	subnet-08c15e52cb9293578 }
+  clusterEndpoints:
+    publicAccess: true
+    privateAccess: true
+
+nodeGroups: []
+
+fargateProfiles:
+  - name: fp-default
+    selectors:
+      # All workloads in the "default" Kubernetes namespace will be
+      # scheduled onto Fargate:
+      - namespace: default
+      # All workloads in the "kube-system" Kubernetes namespace will be
+      # scheduled onto Fargate:
+      - namespace: kube-system
+  - name: fp-dev
+    selectors:
+      # All workloads in the "dev" Kubernetes namespace matching the following
+      # label selectors will be scheduled onto Fargate:
+      - namespace: dev
+        labels:
+          env: dev
+          checks: passed
+    tags:
+      env: dev
+      name: fp-dev
