@@ -57,3 +57,12 @@ stop-docker:
 	-docker stop fortune
 	-docker container rm fortune
 	-killall ssh
+
+start-kube-basic:
+	kubectl apply -f fortune-single.yaml
+	kubectl get deployment fortune
+	minikube service fortune
+
+stop-kube-basic:
+	kubectl delete service fortune
+	kubectl delete deployment fortune

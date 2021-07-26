@@ -74,3 +74,34 @@ kubectl delete service hello-node
 kubectl delete deployment hello-node
 minikube stop
 ```
+
+## Minikube Fortune.
+
+Basic healthcheck.
+
+```bash
+# local minikube registry
+minikube addons enable registry
+
+# Setup Environment, build to registry.
+eval $(minikube docker-env)
+make build-docker
+
+# Edit deployment yaml imagePullPolicy 
+## Set from Always to Never (the image is assumed to exist locally).
+## imagePullPolicy: Never
+
+# Deploy
+kubectl apply -f fortune-deployment.yaml
+kubectl apply -f fortune-service.yaml
+kubectl get deployment fortune
+
+# Test opening the service endpoint, it should show the healthcheck message.
+minikube service fortune
+```
+
+Next, run with environment variables.
+
+```bash
+
+```
