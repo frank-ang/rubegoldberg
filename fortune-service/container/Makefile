@@ -6,6 +6,8 @@ export DB_SECRET_NAME:=service/db/mysql
 export DB_HOST:=host.docker.internal
 export ES_HOST:=https://host.docker.internal:35000
 export REDIS_HOST:=host.docker.internal
+export CONFIG_DIR=./config.gitignore
+export CONFIG_FILE=${CONFIG_DIR}/fortune-config.gitignore
 
 .DEFAULT_GOAL := help
 
@@ -66,3 +68,21 @@ start-kube-basic:
 stop-kube-basic:
 	kubectl delete service fortune
 	kubectl delete deployment fortune
+
+set-config-minikube:
+	@mkdir -p ./config.gitignore
+	@rm -rf ${CONFIG_FILE}
+	@echo DB_SECRET_NAME=${DB_SECRET_NAME} >> ${CONFIG_FILE}
+	@echo DB_HOST=host.minikube.internal >> ${CONFIG_FILE}
+	@echo ES_HOST=https://host.minikube.internal:35000 >> ${CONFIG_FILE}
+	@echo REDIS_HOST=host.minikube.internal >> ${CONFIG_FILE}
+	@echo AWS_REGION=${AWS_REGION} >> ${CONFIG_FILE}
+	@echo AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} >> ${CONFIG_FILE}
+	@echo AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} >> ${CONFIG_FILE}
+	@echo AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN} >> ${CONFIG_FILE}
+	kubectl create configmap fortune-config --from-env-file=${CONFIG_FILE}
+
+start-kube-config:
+	kubectl apply -f fortune-config.yaml
+	kubectl get deployment fortune
+	minikube service fortune

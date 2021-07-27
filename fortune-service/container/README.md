@@ -104,4 +104,9 @@ Next, run with environment variables.
 
 ```bash
 
+# Create environment variables ConfigMap
+make set-config-minikube
+kubectl create configmap fortune-config --from-env-file=./config.gitignore/fortune-config.gitignore
+
+
 ```
