@@ -2,9 +2,10 @@
 
 ### Setup EKS Fargate cluster.
 
-```
+```bash
 eksctl create cluster --config-file ./cluster-fargate.yaml
-
+AWS_REGION=ap-southeast-1
+VPC_ID=vpc-0aab98e7906fc81e5
 CLUSTER_NAME=fortune-cluster
 ```
 
@@ -15,7 +16,7 @@ Refs:
 * https://docs.aws.amazon.com/eks/latest/userguide/aws-load-balancer-controller.html
 * https://www.eksworkshop.com/beginner/180_fargate/prerequisites-for-alb/
 
-```
+```bash
 curl -o iam_policy.json https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.2.0/docs/install/iam_policy.json
 
 aws iam create-policy \
@@ -40,12 +41,72 @@ helm repo add eks https://aws.github.io/eks-charts
 
 helm repo update
 
+
+
 helm upgrade -i aws-load-balancer-controller eks/aws-load-balancer-controller \
   --set clusterName=$CLUSTER_NAME \
   --set serviceAccount.create=false \
   --set serviceAccount.name=aws-load-balancer-controller \
-  -n kube-system
+  -n kube-system \
+  --set region=${AWS_REGION} \
+  --set vpcId=${VPC_ID}
 
 kubectl get deployment -n kube-system aws-load-balancer-controller
+kubectl -n kube-system rollout status deployment aws-load-balancer-controller
+```
+
+# Minikube on localhost
+
+## Minikube Hello
+
+```bash
+minikube start
+minikube dashboard --url
+kubectl create deployment hello-node --image=k8s.gcr.io/echoserver:1.4
+kubectl get deployments
+kubectl get pods
+kubectl get events
+kubectl config view
+kubectl expose deployment hello-node --type=LoadBalancer --port=8080
+kubectl get services
+# Clean up
+kubectl delete service hello-node
+kubectl delete deployment hello-node
+minikube stop
+```
+
+## Minikube Fortune.
+
+Basic healthcheck.
+
+```bash
+# local minikube registry
+minikube addons enable registry
+
+# Setup Environment, build to registry.
+eval $(minikube docker-env)
+make build-docker
+
+# Edit deployment yaml imagePullPolicy 
+## Set from Always to Never (the image is assumed to exist locally).
+## imagePullPolicy: Never
+
+# Deploy
+kubectl apply -f fortune-deployment.yaml
+kubectl apply -f fortune-service.yaml
+kubectl get deployment fortune
+
+# Test opening the service endpoint, it should show the healthcheck message.
+minikube service fortune
+```
+
+Next, run with environment variables.
+
+```bash
+
+# Create environment variables ConfigMap
+make set-config-minikube
+kubectl create configmap fortune-config --from-env-file=./config.gitignore/fortune-config.gitignore
+
 
 ```

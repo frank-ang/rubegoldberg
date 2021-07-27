@@ -12,7 +12,7 @@ export REDIS_HOST:=127.0.0.1
 help:
 	@echo "makefile for fortune"
 	@echo "usage:"
-	@echo "  make [ build-linux | build-mac | test | deploy-push | deploy ]"
+	@echo "  make [ build-linux | build-mac | build-docker | test | deploy-push | deploy ]"
 
 # BUILD
 
