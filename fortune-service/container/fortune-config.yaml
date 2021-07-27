@@ -7,7 +7,7 @@ spec:
     app: fortune
   ports:
    -  protocol: TCP
-      port: 8080
+      port: 8090
       targetPort: 80
 ---
 apiVersion: apps/v1
@@ -33,9 +33,13 @@ spec:
         app: fortune
     spec:
       containers:
-      - image: fortune:latest
+      - name: fortune
+        image: fortune:latest
         imagePullPolicy: Never
-        name: fortune
         ports:
         - containerPort: 80
           protocol: TCP
+        envFrom:
+        - configMapRef:
+            name: fortune-config
+
