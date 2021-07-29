@@ -14,7 +14,7 @@ export CONFIG_FILE=${CONFIG_DIR}/fortune-config.gitignore
 help:
 	@echo "Makefile for Fortune container."
 	@echo "Usage:"
-	@echo "  make [ build-docker | test-docker | set-kube-config | build-kube | test-kube ]"
+	@echo "  make [ build-docker | test-docker | set-minikube-config | build-kube | test-kube ]"
 	@echo "Requires:"
 	@echo "  Setting AWS environment variables in shell."
 
@@ -71,7 +71,7 @@ test-docker: stop-docker start-docker test-mysql test-es test-redis
 
 # Minikube
 
-set-kube-config:
+set-minikube-config:
 	@mkdir -p ./config.gitignore
 	@rm -rf ${CONFIG_FILE}
 	@echo DB_SECRET_NAME=${DB_SECRET_NAME} >> ${CONFIG_FILE}
@@ -82,31 +82,62 @@ set-kube-config:
 	@echo AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} >> ${CONFIG_FILE}
 	@echo AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} >> ${CONFIG_FILE}
 	@echo AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN} >> ${CONFIG_FILE}
-	-kubectl delete configmap fortune-config 
-	kubectl create configmap fortune-config --from-env-file=${CONFIG_FILE}
-	kubectl get configmap fortune-config -o yaml
+	-kubectl delete configmap fortune-config --namespace fortune
+	kubectl create configmap fortune-config --from-env-file=${CONFIG_FILE}  --namespace fortune
+	kubectl get configmap fortune-config -o yaml  --namespace fortune
 
-build-kube:
+set-eks-config:
+	@mkdir -p ./config.gitignore
+	@rm -rf ${CONFIG_FILE}
+	@echo DB_SECRET_NAME=${DB_SECRET_NAME} >> ${CONFIG_FILE}
+	@echo REDIS_HOST=redis00.v8jh5m.ng.0001.apse1.cache.amazonaws.com >> ${CONFIG_FILE}
+	@echo ES_HOST=https://vpc-sandbox00-7zz2l5gm2ihbkrgwsumu2bcpmu.ap-southeast-1.es.amazonaws.com >> ${CONFIG_FILE}
+	-kubectl delete configmap fortune-config --namespace fortune
+	kubectl create configmap fortune-config --from-env-file=${CONFIG_FILE}  --namespace fortune
+	kubectl get configmap fortune-config -o yaml  --namespace fortune
+
+build-minikube:
 	eval $(minikube docker-env)
 	make build-docker
 
-start-kube-basic:
-	kubectl apply -f fortune-single.yaml
-	kubectl get deployment fortune
+deploy-minikube-basic:
+	eval $(minikube docker-env)
+	kubectl apply -f fortune-minikube-basic.yaml
+	kubectl get deployment fortune --namespace fortune
 	minikube service fortune
+
+deploy-minikube:
+	kubectl apply -f fortune-minikube-config.yaml
+	@kubectl get deployment fortune --namespace fortune 
+	@kubectl get svc fortune --namespace fortune
+	@kubectl wait --for=condition=available --timeout=5s deployment/fortune --namespace fortune
+	@sleep 1
+	kubectl port-forward service/fortune 8080:8090 --namespace fortune &
+
+test-minikube: stop-kube deploy-minikube test-redis test-es test-mysql 
+	echo "Minikube service tests completed."
+
+# EKS
+
+build-eks:
+	aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 450428438179.dkr.ecr.ap-southeast-1.amazonaws.com
+	make build-docker
+	docker tag fortune:latest 450428438179.dkr.ecr.ap-southeast-1.amazonaws.com/fortune:latest
+	docker push 450428438179.dkr.ecr.ap-southeast-1.amazonaws.com/fortune:latest
+
+deploy-eks-basic:
+	kubectl apply -f fortune-eks-basic.yaml
+	kubectl get deployment fortune --namespace fortune
+	kubectl get svc fortune --namespace fortune
+
+# Common.
 
 stop-kube:
 	-pkill kubectl
-	kubectl delete service fortune
-	kubectl delete deployment fortune
+	-kubectl delete service fortune --namespace fortune 
+	-kubectl delete deployment fortune --namespace fortune 
 
-start-kube-config:
-	kubectl apply -f fortune-config.yaml
-	@kubectl get deployment fortune
-	@kubectl wait --for=condition=available --timeout=5s deployment/fortune
-	@sleep 1
-	kubectl port-forward service/fortune 8080:8090 &
-
-test-kube: stop-kube start-kube-config test-redis test-es test-mysql 
-	echo "Minikube service tests completed."
-
+status:
+	kubectl get deployment fortune --namespace fortune
+	kubectl get svc fortune --namespace fortune
+	kubectl describe pod `kubectl get pods --namespace fortune -o jsonpath='{.items[0].metadata.name}'` -n fortune

@@ -1,0 +1,52 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: fortune
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: fortune
+  name: fortune
+spec:
+  selector:
+    app: fortune
+  ports:
+   -  protocol: TCP
+      port: 8090
+      targetPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fortune
+  labels:
+    app: fortune
+  namespace: fortune
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fortune
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: fortune
+    spec:
+      containers:
+      - name: fortune
+        image: fortune:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        envFrom:
+        - configMapRef:
+            name: fortune-config
+
