@@ -57,7 +57,7 @@ make  test-kube
 
 ## EKS
 
-### Setup EKS Fargate cluster.
+### Setup EKS cluster.
 
 ```bash
 eksctl create cluster --config-file ./cluster-fargate.yaml
@@ -68,7 +68,7 @@ CLUSTER_NAME=fortune-cluster
 
 ### Setup AWS Load Balancer Controller
 
-Refs:
+Refer to eksworkshop and use the Fargate lab as a guide to setup for the new cluster.
 
 * https://docs.aws.amazon.com/eks/latest/userguide/aws-load-balancer-controller.html
 * https://www.eksworkshop.com/beginner/180_fargate/prerequisites-for-alb/
@@ -117,11 +117,14 @@ Update Local CLI
 # update local CLI
 aws eks update-kubeconfig --name fortune-cluster
 
-# uncurated commands, just taking note for now...
+# uncurated command, just taking note for now, might be useful?
 aws eks get-token --cluster-name fortune-cluster | jq -r '.status.token'
-
-
 ```
+
+Ensure public subnets for the load balancer are tagged: 
+
+"kubernetes.io/role/elb" = "1"
+
 
 ### Enable SSO user for kubectl
 
@@ -153,7 +156,7 @@ kubectl get pods --all-namespaces -o wide
 
 ## Deploy Fortune service to EKS
 
-Fargate Profile setup.
+Create Fargate Profile.
 
 ```bash
 eksctl create fargateprofile --cluster fortune-cluster \
@@ -161,4 +164,21 @@ eksctl create fargateprofile --cluster fortune-cluster \
 eksctl get fargateprofile --cluster fortune-cluster -o yaml
 ```
 
-Did not change CoreDNS yet...
+Did not change CoreDNS.
+
+Deploy Simple Fortune
+
+```bash
+make deploy-eks-basic
+make status
+# shows the ALB endpoint, which should return the hello message. 
+make 
+```
+
+Create the ConfigMap.
+
+TODO
+
+Deploy Fortune with Environment Variables
+
+make deploy-eks-... TODO

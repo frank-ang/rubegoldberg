@@ -128,6 +128,7 @@ build-eks:
 deploy-eks-basic:
 	kubectl apply -f fortune-eks-basic.yaml
 	kubectl get deployment fortune --namespace fortune
+	kubectl -n fortune rollout status deployment fortune
 	kubectl get svc fortune --namespace fortune
 
 # Common.
@@ -141,3 +142,5 @@ status:
 	kubectl get deployment fortune --namespace fortune
 	kubectl get svc fortune --namespace fortune
 	kubectl describe pod `kubectl get pods --namespace fortune -o jsonpath='{.items[0].metadata.name}'` -n fortune
+	kubectl get ingress/ingress-fortune -n fortune
+	kubectl get ingress/ingress-fortune -n fortune -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' && echo
