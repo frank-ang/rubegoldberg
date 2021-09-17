@@ -1,0 +1,66 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: fortune
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: fortune
+  name: fortune
+spec:
+  selector:
+    app: fortune
+  ports:
+   -  protocol: TCP
+      port: 80
+      targetPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fortune
+  labels:
+    app: fortune
+  namespace: fortune
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fortune
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: fortune
+    spec:
+      containers:
+      - image: 450428438179.dkr.ecr.ap-southeast-1.amazonaws.com/fortune:latest
+        imagePullPolicy: Always
+        name: fortune
+        ports:
+        - containerPort: 80
+          protocol: TCP
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  namespace: fortune
+  name: ingress-fortune
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: fortune
+              servicePort: 80
