@@ -14,7 +14,7 @@ export CONFIG_FILE=${CONFIG_DIR}/fortune-config.gitignore
 help:
 	@echo "Makefile for Fortune container."
 	@echo "Usage:"
-	@echo "  make [ build-docker | test-docker | set-minikube-config | build-kube | test-kube ]"
+	@echo "  make [ build-docker | test-docker | set-minikube-config | build-minukube | test-minikube | set-eks-config | build-eks | test-eks]"
 	@echo "Requires:"
 	@echo "  Setting AWS environment variables in shell."
 
@@ -86,16 +86,6 @@ set-minikube-config:
 	kubectl create configmap fortune-config --from-env-file=${CONFIG_FILE}  --namespace fortune
 	kubectl get configmap fortune-config -o yaml  --namespace fortune
 
-set-eks-config:
-	@mkdir -p ./config.gitignore
-	@rm -rf ${CONFIG_FILE}
-	@echo DB_SECRET_NAME=${DB_SECRET_NAME} >> ${CONFIG_FILE}
-	@echo REDIS_HOST=redis00.v8jh5m.ng.0001.apse1.cache.amazonaws.com >> ${CONFIG_FILE}
-	@echo ES_HOST=https://vpc-sandbox00-7zz2l5gm2ihbkrgwsumu2bcpmu.ap-southeast-1.es.amazonaws.com >> ${CONFIG_FILE}
-	-kubectl delete configmap fortune-config --namespace fortune
-	kubectl create configmap fortune-config --from-env-file=${CONFIG_FILE}  --namespace fortune
-	kubectl get configmap fortune-config -o yaml  --namespace fortune
-
 build-minikube:
 	eval $(minikube docker-env)
 	make build-docker
@@ -119,6 +109,16 @@ test-minikube: stop-kube deploy-minikube test-redis test-es test-mysql
 
 # EKS
 
+set-eks-config:
+	@mkdir -p ./config.gitignore
+	@rm -rf ${CONFIG_FILE}
+	@echo DB_SECRET_NAME=${DB_SECRET_NAME} >> ${CONFIG_FILE}
+	@echo REDIS_HOST=redis00.v8jh5m.ng.0001.apse1.cache.amazonaws.com >> ${CONFIG_FILE}
+	@echo ES_HOST=https://vpc-sandbox00-7zz2l5gm2ihbkrgwsumu2bcpmu.ap-southeast-1.es.amazonaws.com >> ${CONFIG_FILE}
+	-kubectl delete configmap fortune-config --namespace fortune
+	kubectl create configmap fortune-config --from-env-file=${CONFIG_FILE}  --namespace fortune
+	kubectl get configmap fortune-config -o yaml  --namespace fortune
+
 build-eks:
 	aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 450428438179.dkr.ecr.ap-southeast-1.amazonaws.com
 	make build-docker
@@ -127,6 +127,12 @@ build-eks:
 
 deploy-eks-basic:
 	kubectl apply -f fortune-eks-basic.yaml
+	kubectl get deployment fortune --namespace fortune
+	kubectl -n fortune rollout status deployment fortune
+	kubectl get svc fortune --namespace fortune
+
+deploy-eks:
+	kubectl apply -f fortune-eks-config.yaml
 	kubectl get deployment fortune --namespace fortune
 	kubectl -n fortune rollout status deployment fortune
 	kubectl get svc fortune --namespace fortune
