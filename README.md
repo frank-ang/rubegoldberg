@@ -1,9 +1,13 @@
 # Fortune API
 
+The good-ol fun UNIX fortune command, re-implemented as a RESTful API that returns a famous quote. 
+Built on AWS API Gateway, Golang, with MySQL, ElasticSearch, and Redis back-ends. Runtime was initially EC2 Autoscaling, later added containerized on EKS.
+
+![Browser Screenshot](docs/FortuneScreenshot.png)
+
 ## Architecture
+
 ![Architecture Diagram](docs/architecture.png)
-
-
 
 ## Setup Networking and Databases 
 
