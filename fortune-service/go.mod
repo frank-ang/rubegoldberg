@@ -7,9 +7,8 @@ require (
 	github.com/elastic/go-elasticsearch/v7 v7.0.0
 	github.com/go-redis/redis/v8 v8.0.0-beta.6
 	github.com/go-sql-driver/mysql v1.5.0
-	golang.org/x/net v0.0.0-20210119194325-5f4716e94777 // indirect
 	golang.org/x/sys v0.1.0 // indirect
-	golang.org/x/text v0.3.5 // indirect
+	golang.org/x/text v0.3.8 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
 
